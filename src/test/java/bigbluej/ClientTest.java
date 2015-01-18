@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.servlet.ServletResponse;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -40,6 +41,8 @@ public class ClientTest {
     private CrawlerFactory crawlerFactory = Mockito.mock(CrawlerFactory.class);
 
     private Crawler crawler = Mockito.mock(Crawler.class);
+
+    private ServletResponse servletResponse = Mockito.mock(ServletResponse.class);
 
     @Before
     public void setUp() throws Exception {
@@ -74,7 +77,7 @@ public class ClientTest {
 
     @Test
     public void shouldCreateMeeting() throws Exception {
-        expectedResult = "<response><returncode>SUCCESS</returncode><meetingID>4711</meetingID><attendeePW>ap</attendeePW><moderatorPW>mp</moderatorPW><createTime>1421447393750</createTime><createDate>Fri Jan 16 17:29:53 EST 2015</createDate><hasUserJoined>false</hasUserJoined><duration>0</duration><hasBeenForciblyEnded>false</hasBeenForciblyEnded><messageKey/><message/></response>";
+        expectedResult = "the response";
 
         when(crawlerFactory.createCrawler()).thenReturn(crawler);
         when(crawler.post(anyString())).thenReturn(expectedResult);
@@ -103,6 +106,41 @@ public class ClientTest {
         String expected = "param1=value1&param2=value2";
         String actual = Client.toQuery(sortedMap);
         assertEquals(expected, actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failJoinMeetingWithoutCommand() throws Exception {
+        client.joinMeeting(servletResponse, null);
+    }
+
+    @Test
+    public void shouldJoinMeeting() throws Exception {
+        when(crawlerFactory.createCrawler()).thenReturn(crawler);
+        when(crawler.post(anyString())).thenReturn(null);
+        client.joinMeeting(servletResponse, JoinCommand.builder()
+                .fullName("Al Bundy")
+                .password("123")
+                .meetingID("4711")
+                .build());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failGetMeetingInfoWithoutCommand() throws Exception {
+        client.getMeetingInfo(null);
+    }
+
+    @Test
+    public void shouldGetMeetingInfo() throws Exception {
+        expectedResult = "the response";
+
+        when(crawlerFactory.createCrawler()).thenReturn(crawler);
+        when(crawler.post(anyString())).thenReturn(expectedResult);
+
+        assertEquals(expectedResult, client.getMeetingInfo(GetMeetingInfoCommand.builder()
+                .password("123")
+                .meetingID("4711")
+                .build()));
+
     }
 
 }

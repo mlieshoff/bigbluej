@@ -38,7 +38,7 @@ public class CreateCommand {
     private final String meta;
 
     private CreateCommand(String name, String meetingID, String attendeePW, String moderatorPW, String welcome, String dialNumber, String voiceBridge,
-                          String webVoice, String logoutURL, boolean record, int duration, String meta) {
+            String webVoice, String logoutURL, boolean record, int duration, String meta) {
         Validate.notEmpty(meetingID);
         this.name = name;
         this.meetingID = meetingID;

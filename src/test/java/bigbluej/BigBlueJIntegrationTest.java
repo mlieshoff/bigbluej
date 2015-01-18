@@ -17,6 +17,11 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.component.AbstractLifeCycle;
+import org.eclipse.jetty.util.component.LifeCycle;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,12 +34,38 @@ public class BigBlueJIntegrationTest {
 
     private Api api;
 
+    private Server server;
+
+    private volatile boolean isRunning = false;
+
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         api = Api.builder()
                 .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
                 .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
                 .build();
+
+        server = new Server(8080);
+        ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/my-app", true, false);
+        servletContextHandler.addServlet(UserJoinService.class, "/join");
+        server.addLifeCycleListener(new AbstractLifeCycle.AbstractLifeCycleListener() {
+            @Override
+            public void lifeCycleStarted(LifeCycle event) {
+                isRunning = true;
+                super.lifeCycleStarted(event);
+            }
+        });
+        server.start();
+
+        while(!isRunning) {
+            Thread.sleep(100);
+        }
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        server.stop();
     }
 
     @Test
@@ -55,6 +86,39 @@ public class BigBlueJIntegrationTest {
         assertEquals(createCommand.getMeetingID(), meetingResponse.getMeetingID());
         assertEquals(createCommand.getAttendeePW(), meetingResponse.getAttendeePW());
         assertEquals(createCommand.getModeratorPW(), meetingResponse.getModeratorPW());
+    }
+
+    @Test
+    public void shouldJoinMeeting() throws Exception {
+        long meetingID = System.currentTimeMillis();
+
+        // create
+        CreateCommand createCommand = CreateCommand.builder()
+                .meetingID("myMeeting" + meetingID)
+                .attendeePW("passpass")
+                .moderatorPW("superpass")
+                .name("myMeeting")
+                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
+                .build();
+        MeetingResponse meetingResponse = api.createMeeting(createCommand);
+
+        // join as moderator
+
+        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+        System.out.println("result> " + result);
+
+        // get meeting info
+        GetMeetingInfoCommand getMeetingInfoCommand = GetMeetingInfoCommand.builder()
+                .meetingID("myMeeting" + meetingID)
+                .password("superpass")
+                .build();
+        GetMeetingInfoResponse getMeetingInfoResponse = api.getMeetingInfo(getMeetingInfoCommand);
+        checkGetMeetingInfoResponse(getMeetingInfoCommand, getMeetingInfoResponse);
+        System.out.println("--> " + getMeetingInfoResponse);
+    }
+
+    private void checkGetMeetingInfoResponse(GetMeetingInfoCommand getMeetingInfoCommand, GetMeetingInfoResponse getMeetingInfoResponse) {
+        assertEquals(ReturnCode.SUCCESS, getMeetingInfoResponse.getReturnCode());
     }
 
     @Test
