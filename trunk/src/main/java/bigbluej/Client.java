@@ -19,6 +19,8 @@ package bigbluej;
 
 import org.apache.commons.lang.Validate;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -62,8 +64,29 @@ public class Client {
         return s.toString();
     }
 
+    public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) throws Exception {
+        Validate.notNull(joinCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
+        String checksum = Checksum.create("join", query, sharedSecret);
+        if (servletResponse instanceof HttpServletResponse) {
+            String redirectUrl = url + "/join?" + query + "&checksum=" + checksum;
+            System.out.println("redirect> " + redirectUrl);
+            HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+            httpServletResponse.sendRedirect(redirectUrl);
+            httpServletResponse.setStatus(200);
+        }
+    }
+
+    public String getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
+        Validate.notNull(getMeetingInfoCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getMeetingInfoCommand));
+        String checksum = Checksum.create("getMeetingInfo", query, sharedSecret);
+        return crawlerFactory.createCrawler().post(url + "/getMeetingInfo?" + query + "&checksum=" + checksum);
+    }
+
     public String getMeetings() throws Exception {
         String checksum = Checksum.create("getMeetings", "", sharedSecret);
         return crawlerFactory.createCrawler().get(url + "/getMeetings?checksum=" + checksum);
     }
+
 }

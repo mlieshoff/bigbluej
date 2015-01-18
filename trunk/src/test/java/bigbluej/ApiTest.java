@@ -19,6 +19,9 @@ package bigbluej;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import javax.servlet.ServletResponse;
 
 import static org.junit.Assert.assertEquals;
 
@@ -45,36 +48,38 @@ public class ApiTest {
 
     private static final String GET_MEETINGS_XML =
             "<response>" +
-                    "    <returncode>SUCCESS</returncode>" +
-                    "    <meetings>" +
-                    "        <meeting>" +
-                    "            <meetingID>66f8c04072edbf0b23aeb2e1e4db92d1-2-1</meetingID>" +
-                    "            <meetingName>Visioconférence avec Agnila</meetingName>" +
-                    "            <createTime>1421537049295</createTime>" +
-                    "            <createDate>Sat Jan 17 18:24:09 EST 2015</createDate>" +
-                    "            <attendeePW>a88c97163ab9d31e536e557c817fc3ef</attendeePW>" +
-                    "            <moderatorPW>310b2f5877c6d1d83d36de6a7c8f0ba4</moderatorPW>" +
-                    "            <hasBeenForciblyEnded>false</hasBeenForciblyEnded>" +
-                    "            <running>true</running>" +
-                    "            <duration>240</duration>" +
-                    "            <hasUserJoined>true</hasUserJoined>" +
-                    "        </meeting>" +
-                    "        <meeting>" +
-                    "            <meetingID>myMeeting1421540508138</meetingID>" +
-                    "            <meetingName>myMeeting</meetingName>" +
-                    "            <createTime>1421540509193</createTime>" +
-                    "            <createDate>Sat Jan 17 19:21:49 EST 2015</createDate>" +
-                    "            <attendeePW>passpass</attendeePW>" +
-                    "            <moderatorPW>superpass</moderatorPW>" +
-                    "            <hasBeenForciblyEnded>false</hasBeenForciblyEnded>" +
-                    "            <running>false</running>" +
-                    "            <duration>0</duration>" +
-                    "            <hasUserJoined>false</hasUserJoined>" +
-                    "        </meeting>" +
-                    "    </meetings>" +
-                    "</response>";
+            "    <returncode>SUCCESS</returncode>" +
+            "    <meetings>" +
+            "        <meeting>" +
+            "            <meetingID>66f8c04072edbf0b23aeb2e1e4db92d1-2-1</meetingID>" +
+            "            <meetingName>Visioconférence avec Agnila</meetingName>" +
+            "            <createTime>1421537049295</createTime>" +
+            "            <createDate>Sat Jan 17 18:24:09 EST 2015</createDate>" +
+            "            <attendeePW>a88c97163ab9d31e536e557c817fc3ef</attendeePW>" +
+            "            <moderatorPW>310b2f5877c6d1d83d36de6a7c8f0ba4</moderatorPW>" +
+            "            <hasBeenForciblyEnded>false</hasBeenForciblyEnded>" +
+            "            <running>true</running>" +
+            "            <duration>240</duration>" +
+            "            <hasUserJoined>true</hasUserJoined>" +
+            "        </meeting>" +
+            "        <meeting>" +
+            "            <meetingID>myMeeting1421540508138</meetingID>" +
+            "            <meetingName>myMeeting</meetingName>" +
+            "            <createTime>1421540509193</createTime>" +
+            "            <createDate>Sat Jan 17 19:21:49 EST 2015</createDate>" +
+            "            <attendeePW>passpass</attendeePW>" +
+            "            <moderatorPW>superpass</moderatorPW>" +
+            "            <hasBeenForciblyEnded>false</hasBeenForciblyEnded>" +
+            "            <running>false</running>" +
+            "            <duration>0</duration>" +
+            "            <hasUserJoined>false</hasUserJoined>" +
+            "        </meeting>" +
+            "    </meetings>" +
+            "</response>";
 
     private Api api;
+
+    private ServletResponse servletResponse = Mockito.mock(ServletResponse.class);
 
     @Before
     public void setUp() throws Exception {
@@ -91,6 +96,11 @@ public class ApiTest {
             @Override
             public String getMeetings() throws Exception {
                 return GET_MEETINGS_XML;
+            }
+
+            @Override
+            public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) throws Exception {
+                super.joinMeeting(servletResponse, joinCommand);
             }
         });
     }
@@ -131,6 +141,15 @@ public class ApiTest {
                 .attendeePW("123")
                 .moderatorPW("mp")
                 .build()));
+    }
+
+    @Test
+    public void shouldJoin() throws Exception {
+        api.joinMeeting(servletResponse, JoinCommand.builder()
+                .meetingID("4711")
+                .password("abc")
+                .fullName("Al Bundy")
+                .build());
     }
 
     @Test
