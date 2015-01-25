@@ -89,6 +89,34 @@ public class BigBlueJIntegrationTest {
     }
 
     @Test
+    public void shouldCreateMeetingWithSlides() throws Exception {
+        long meetingID = System.currentTimeMillis();
+        CreateCommand createCommand = CreateCommand.builder()
+                .meetingID("myMeeting" + meetingID)
+                .attendeePW("passpass")
+                .moderatorPW("superpass")
+                .name("myMeeting")
+                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
+                .build();
+
+        ModulesCommand modulesCommand = ModulesCommand.builder()
+                .module(ModuleCommand.builder()
+                        .name("presentation")
+                        .document(DocumentCommand.builder()
+                                .url("http://www.wave.org.au/jupgrade/images/sample.pdf")
+                                .build())
+/*                        .document(DocumentCommand.builder()
+                                .name("testpdf.pdf")
+                                .content(FileUtils.readFileToByteArray(new File("src/test/resources/testpdf.pdf")))
+                                .build())
+*/
+                        .build())
+                .build();
+
+        checkMeetingResponse(createCommand, api.createMeeting(createCommand, modulesCommand));
+    }
+
+    @Test
     public void shouldJoinMeeting() throws Exception {
         long meetingID = System.currentTimeMillis();
 
