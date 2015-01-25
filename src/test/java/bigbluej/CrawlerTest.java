@@ -59,4 +59,14 @@ public class CrawlerTest {
         assertEquals(expectedResult, crawler.post("the-url"));
     }
 
+    @Test
+    public void shouldPostWithBody() throws IOException {
+        String expectedResult = "break-out-prison";
+        when(httpClientFactory.create()).thenReturn(httpClient);
+        HttpResponse httpResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("http", 100, 1), 200, ""));
+        httpResponse.setEntity(new StringEntity(expectedResult));
+        when(httpClient.execute((HttpUriRequest) anyObject())).thenReturn(httpResponse);
+        assertEquals(expectedResult, crawler.post("the-url", "the-body"));
+    }
+
 }

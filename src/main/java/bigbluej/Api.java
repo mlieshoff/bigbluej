@@ -20,8 +20,6 @@ package bigbluej;
 import org.apache.commons.lang.Validate;
 
 import javax.servlet.ServletResponse;
-import javax.xml.bind.JAXB;
-import java.io.StringReader;
 
 /**
  * @author Michael Lieshoff
@@ -37,12 +35,11 @@ public class Api {
     }
 
     public MeetingResponse createMeeting(CreateCommand createCommand) throws Exception {
-        return fromXml(MeetingResponse.class, client.createMeeting(createCommand));
+        return client.createMeeting(createCommand);
     }
 
-    private <T> T fromXml(Class<T> clazz, String input) {
-        System.out.println("xml> " + input);
-        return JAXB.unmarshal(new StringReader(input), clazz);
+    public MeetingResponse createMeeting(CreateCommand createCommand, ModulesCommand modulesCommand) throws Exception {
+        return client.createMeeting(createCommand, modulesCommand);
     }
 
     public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) throws Exception {
@@ -50,11 +47,11 @@ public class Api {
     }
 
     public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
-        return fromXml(GetMeetingInfoResponse.class, client.getMeetingInfo(getMeetingInfoCommand));
+        return client.getMeetingInfo(getMeetingInfoCommand);
     }
 
     public MeetingsResponse getMeetings() throws Exception {
-        return fromXml(MeetingsResponse.class, client.getMeetings());
+        return client.getMeetings();
     }
 
     public static Builder builder() {

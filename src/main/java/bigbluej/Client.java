@@ -17,12 +17,18 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXB;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -44,11 +50,18 @@ public class Client {
         this.sharedSecret = sharedSecret;
     }
 
-    public String createMeeting(CreateCommand createCommand) throws Exception {
+    public MeetingResponse createMeeting(CreateCommand createCommand) throws Exception {
         Validate.notNull(createCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
         String checksum = Checksum.create("create", query, sharedSecret);
-        return crawlerFactory.createCrawler().post(url + "/create?" + query + "&checksum=" + checksum);
+        String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
+        Crawler crawler = crawlerFactory.createCrawler();
+        return fromXml(MeetingResponse.class, crawler.post(completeUrl));
+    }
+
+    private <T> T fromXml(Class<T> clazz, String input) {
+        System.out.println("xml> " + input);
+        return JAXB.unmarshal(new StringReader(input), clazz);
     }
 
     public static String toQuery(SortedMap<String, Object> sortedParameterMap) throws UnsupportedEncodingException {
@@ -64,6 +77,41 @@ public class Client {
         return s.toString();
     }
 
+    public MeetingResponse createMeeting(CreateCommand createCommand, ModulesCommand modulesCommand) throws Exception {
+        Validate.notNull(createCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
+        String checksum = Checksum.create("create", query, sharedSecret);
+        String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
+        String body = toXml(modulesCommand);
+        System.out.println("body> " + body);
+        Crawler crawler = crawlerFactory.createCrawler();
+        return fromXml(MeetingResponse.class, crawler.post(completeUrl, body));
+    }
+
+    private String toXml(ModulesCommand modulesCommand) {
+        Modules modules = new Modules();
+        modules.setModules(new ArrayList<Module>());
+        for (ModuleCommand moduleCommand : modulesCommand.getModules()) {
+            Module module = new Module();
+            module.setName(moduleCommand.getName());
+            module.setDocuments(new ArrayList<Document>());
+            for (DocumentCommand documentCommand : moduleCommand.getDocuments()) {
+                Document document = new Document();
+                document.setUrl(documentCommand.getUrl());
+                if (StringUtils.isNotBlank(documentCommand.getName())) {
+                    document.setName(documentCommand.getName());
+                    document.setValue(Base64.encodeBase64String(documentCommand.getContent()));
+                    System.out.println("base64 value> " + document.getValue());
+                }
+                module.getDocuments().add(document);
+            }
+            modules.getModules().add(module);
+        }
+        StringWriter stringWriter = new StringWriter();
+        JAXB.marshal(modules, stringWriter);
+        return stringWriter.getBuffer().toString();
+    }
+
     public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) throws Exception {
         Validate.notNull(joinCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
@@ -77,16 +125,16 @@ public class Client {
         }
     }
 
-    public String getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
+    public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
         Validate.notNull(getMeetingInfoCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getMeetingInfoCommand));
         String checksum = Checksum.create("getMeetingInfo", query, sharedSecret);
-        return crawlerFactory.createCrawler().post(url + "/getMeetingInfo?" + query + "&checksum=" + checksum);
+        return fromXml(GetMeetingInfoResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetingInfo?" + query + "&checksum=" + checksum));
     }
 
-    public String getMeetings() throws Exception {
+    public MeetingsResponse getMeetings() throws Exception {
         String checksum = Checksum.create("getMeetings", "", sharedSecret);
-        return crawlerFactory.createCrawler().get(url + "/getMeetings?checksum=" + checksum);
+        return fromXml(MeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
     }
 
 }

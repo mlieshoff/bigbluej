@@ -21,6 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +38,21 @@ public class Crawler {
         System.out.println("post> " + url);
         HttpClient client = httpClientFactory.create();
         HttpPost request = new HttpPost(url);
+        HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuilder s = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            s.append(line);
+        }
+        return s.toString();
+    }
+
+    public String post(String url, String body) throws IOException {
+        System.out.println("post with body> " + url);
+        HttpClient client = httpClientFactory.create();
+        HttpPost request = new HttpPost(url);
+        request.setEntity(new StringEntity(body));
         HttpResponse response = client.execute(request);
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuilder s = new StringBuilder();
