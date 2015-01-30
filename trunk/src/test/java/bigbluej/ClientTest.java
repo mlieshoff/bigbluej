@@ -26,6 +26,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -81,6 +82,13 @@ public class ClientTest {
             "    </meetings>" +
             "</response>";
 
+    private static final String IS_MEETING_RUNNING_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                    "<response>" +
+                    "   <returncode>SUCCESS</returncode>" +
+                    "   <running>true</running>" +
+                    "</response>";
+
     private Client client;
 
     private CrawlerFactory crawlerFactory;
@@ -135,15 +143,12 @@ public class ClientTest {
         meetingResponse.setCreateTime(1421447393750L);
         meetingResponse.setMessage("");
         meetingResponse.setMessageKey("");
-
         CreateCommand createCommand = CreateCommand.builder()
                 .meetingID("4711")
                 .attendeePW("123")
                 .moderatorPW("mp")
                 .build();
-
         when(crawler.post("junit-test-server/create?attendeePW=123&duration=0&meetingID=4711&moderatorPW=mp&record=false&checksum=f10e533b82bcf83987b3467efdd1817e49d72807")).thenReturn(CREATE_MEETING_XML);
-
         assertEquals(meetingResponse, client.createMeeting(createCommand));
     }
 
@@ -158,13 +163,11 @@ public class ClientTest {
         meetingResponse.setCreateTime(1421447393750L);
         meetingResponse.setMessage("");
         meetingResponse.setMessageKey("");
-
         CreateCommand createCommand = CreateCommand.builder()
                 .meetingID("4711")
                 .attendeePW("123")
                 .moderatorPW("mp")
                 .build();
-
         ModulesCommand modulesCommand = ModulesCommand.builder()
                 .module(ModuleCommand.builder()
                         .name("presentation")
@@ -178,18 +181,17 @@ public class ClientTest {
                         .build()
                 )
                 .build();
-
         String body =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-                "<modules>" +
-                "    <module name=\"presentation\">" +
-                "        <document url=\"theurl\"/>" +
-                "        <document name=\"theotherurl\"/>" +
-                "    </module>" +
-                "</modules>";
-
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                "<modules>\n" +
+                "    <module name=\"presentation\">\n" +
+                "        <document url=\"theurl\"/>\n" +
+                "        <document name=\"theotherurl\">AAE=</document>\n" +
+                "    </module>\n" +
+                "</modules>\n";
+        System.out.println("exp body: " + body);
+        System.out.println("exp url : junit-test-server/create?attendeePW=123&duration=0&meetingID=4711&moderatorPW=mp&record=false&checksum=f10e533b82bcf83987b3467efdd1817e49d72807" );
         when(crawler.post("junit-test-server/create?attendeePW=123&duration=0&meetingID=4711&moderatorPW=mp&record=false&checksum=f10e533b82bcf83987b3467efdd1817e49d72807", body)).thenReturn(CREATE_MEETING_XML);
-
         assertEquals(meetingResponse, client.createMeeting(createCommand, modulesCommand));
     }
 
@@ -225,10 +227,22 @@ public class ClientTest {
                 .password("abc")
                 .fullName("Al Bundy")
                 .build();
-
-        Mockito.doNothing().when(crawler).post(anyString());
-
         client.joinMeeting(servletResponse, joinCommand);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failIsMeetingRunningWithNullCommand() throws Exception {
+        client.isMeetingRunning(null);
+    }
+
+    @Test
+    public void shouldIsMeetingRunning() throws Exception {
+        when(crawler.post(anyString())).thenReturn(IS_MEETING_RUNNING_XML);
+        IsMeetingRunningResponse isMeetingRunningResponse = client.isMeetingRunning(IsMeetingRunningCommand.builder()
+                .meetingID("abc")
+                .build());
+        assertEquals(ReturnCode.SUCCESS, isMeetingRunningResponse.getReturnCode());
+        assertTrue(isMeetingRunningResponse.isRunning());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -241,6 +255,5 @@ public class ClientTest {
         when(crawler.post(anyString())).thenReturn(GET_MEETINGS_XML);
         assertEquals(2, client.getMeetings().getMeetings().size());
     }
-
 
 }

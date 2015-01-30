@@ -20,21 +20,21 @@ package bigbluej;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Michael Lieshoff
  */
-public class ModulesCommandTest {
+public class IsMeetingRunningCommandTest {
 
-    private ModulesCommand.Builder builder;
+    private IsMeetingRunningCommand.Builder builder;
+
+    private IsMeetingRunningCommand.Builder join;
 
     @Before
     public void setUp() {
-        builder = ModulesCommand.builder();
+        builder = IsMeetingRunningCommand.builder();
     }
 
     @Test
@@ -43,23 +43,13 @@ public class ModulesCommandTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void failToAddNullModule() {
-        builder.module(null);
+    public void failBuildWithoutMeetingID() {
+        builder.build();
     }
 
     @Test
-    public void shouldAddModule() {
-        ModuleCommand moduleCommand = ModuleCommand.builder().name("name").build();
-        assertTrue(builder.module(moduleCommand).build().getModules().contains(moduleCommand));
-    }
-
-    @Test
-    public void shouldAddTwoModules() {
-        ModuleCommand moduleCommand1 = ModuleCommand.builder().name("name1").build();
-        ModuleCommand moduleCommand2 = ModuleCommand.builder().name("name2").build();
-        List<ModuleCommand> modules = builder.module(moduleCommand1).module(moduleCommand2).build().getModules();
-        assertTrue(modules.contains(moduleCommand1));
-        assertTrue(modules.contains(moduleCommand2));
+    public void shouldBuildWithMeetingID() {
+        assertEquals("abc", builder.meetingID("abc").build().getMeetingID());
     }
 
 }

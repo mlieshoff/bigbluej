@@ -69,28 +69,23 @@ public class ApiTest {
     @Test
     public void shouldCreateMeetingWithId() throws Exception {
         MeetingResponse meetingResponse = new MeetingResponse();
-
         CreateCommand createCommand = CreateCommand.builder()
                 .meetingID("4711")
                 .attendeePW("123")
                 .moderatorPW("mp")
                 .build();
-
         when(client.createMeeting(createCommand)).thenReturn(meetingResponse);
-
         assertEquals(meetingResponse, api.createMeeting(createCommand));
     }
 
     @Test
     public void shouldCreateMeetingWithSlides() throws Exception {
         MeetingResponse meetingResponse = new MeetingResponse();
-
         CreateCommand createCommand = CreateCommand.builder()
                 .meetingID("4711")
                 .attendeePW("123")
                 .moderatorPW("mp")
                 .build();
-
         ModulesCommand modulesCommand = ModulesCommand.builder()
                 .module(ModuleCommand.builder()
                         .name("presentation")
@@ -103,9 +98,7 @@ public class ApiTest {
                                 .build())
                         .build())
                 .build();
-
         when(client.createMeeting(createCommand, modulesCommand)).thenReturn(meetingResponse);
-
         assertEquals(meetingResponse, api.createMeeting(createCommand, modulesCommand));
     }
 
@@ -116,10 +109,18 @@ public class ApiTest {
                 .password("abc")
                 .fullName("Al Bundy")
                 .build();
-
         Mockito.doNothing().when(client).joinMeeting(servletResponse, joinCommand);
-
         api.joinMeeting(servletResponse, joinCommand);
+    }
+
+    @Test
+    public void shouldIsMeetingRunning() throws Exception {
+        IsMeetingRunningResponse isMeetingRunningResponse = new IsMeetingRunningResponse();
+        IsMeetingRunningCommand isMeetingRunningCommand = IsMeetingRunningCommand.builder()
+                .meetingID("4711")
+                .build();
+        when(client.isMeetingRunning(isMeetingRunningCommand)).thenReturn(isMeetingRunningResponse);
+        assertEquals(isMeetingRunningResponse, api.isMeetingRunning(isMeetingRunningCommand));
     }
 
     @Test

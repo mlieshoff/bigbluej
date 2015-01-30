@@ -19,55 +19,36 @@ package bigbluej;
 
 import org.apache.commons.lang.Validate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Michael Lieshoff
  */
-public class ModuleCommand {
+public class IsMeetingRunningCommand {
 
-    private final String name;
-    private final List<DocumentCommand> documents;
+    private final String meetingID;
 
-    private ModuleCommand(String name, List<DocumentCommand> documents) {
-        Validate.notEmpty(name, "name");
-        this.name = name;
-        this.documents = documents;
+    public IsMeetingRunningCommand(String meetingID) {
+        Validate.notEmpty(meetingID, "meetingID");
+        this.meetingID = meetingID;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public List<DocumentCommand> getDocuments() {
-        return documents;
+    public String getMeetingID() {
+        return meetingID;
     }
 
     public static class Builder {
 
-        private String name;
-        private List<DocumentCommand> documents = new ArrayList<>();
+        private String meetingID;
 
-        private Builder() {
+        public IsMeetingRunningCommand build() {
+            return new IsMeetingRunningCommand(meetingID);
         }
 
-        public ModuleCommand build() {
-            return new ModuleCommand(name, documents);
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder document(DocumentCommand documentCommand) {
-            Validate.notNull(documentCommand);
-            documents.add(documentCommand);
+        public Builder meetingID(String meetingID) {
+            this.meetingID = meetingID;
             return this;
         }
 

@@ -82,6 +82,7 @@ public class Client {
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
         String checksum = Checksum.create("create", query, sharedSecret);
         String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
+        System.out.println("url> " + completeUrl);
         String body = toXml(modulesCommand);
         System.out.println("body> " + body);
         Crawler crawler = crawlerFactory.createCrawler();
@@ -125,6 +126,15 @@ public class Client {
         }
     }
 
+    public IsMeetingRunningResponse isMeetingRunning(IsMeetingRunningCommand isMeetingRunningCommand) throws Exception {
+        Validate.notNull(isMeetingRunningCommand, "isMeetingRunningCommand");
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(isMeetingRunningCommand));
+        String checksum = Checksum.create("isMeetingRunning", query, sharedSecret);
+        String completeUrl = url + "/isMeetingRunning?" + query + "&checksum=" + checksum;
+        Crawler crawler = crawlerFactory.createCrawler();
+        return fromXml(IsMeetingRunningResponse.class, crawler.post(completeUrl));
+    }
+
     public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
         Validate.notNull(getMeetingInfoCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getMeetingInfoCommand));
@@ -136,5 +146,4 @@ public class Client {
         String checksum = Checksum.create("getMeetings", "", sharedSecret);
         return fromXml(MeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
     }
-
 }

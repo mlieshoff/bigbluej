@@ -20,9 +20,11 @@ package bigbluej;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Set;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Michael Lieshoff
@@ -66,7 +68,7 @@ public class ModuleCommandTest {
     public void shouldAddTwoModules() {
         DocumentCommand documentCommand1 = DocumentCommand.builder().url("url1").build();
         DocumentCommand documentCommand2 = DocumentCommand.builder().url("url2").build();
-        Set<DocumentCommand> documents = builder.name("module").document(documentCommand1).document(documentCommand2).build().getDocuments();
+        List<DocumentCommand> documents = builder.name("module").document(documentCommand1).document(documentCommand2).build().getDocuments();
         assertTrue(documents.contains(documentCommand1));
         assertTrue(documents.contains(documentCommand2));
     }
