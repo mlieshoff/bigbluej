@@ -19,17 +19,17 @@ package bigbluej;
 
 import org.apache.commons.lang.Validate;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Michael Lieshoff
  */
 public class ModulesCommand {
 
-    private final Set<ModuleCommand> moduleCommands;
+    private final List<ModuleCommand> moduleCommands;
 
-    private ModulesCommand(Set<ModuleCommand> moduleCommands) {
+    private ModulesCommand(List<ModuleCommand> moduleCommands) {
         this.moduleCommands = moduleCommands;
     }
 
@@ -37,13 +37,13 @@ public class ModulesCommand {
         return new Builder();
     }
 
-    public Set<ModuleCommand> getModules() {
+    public List<ModuleCommand> getModules() {
         return moduleCommands;
     }
 
     public static class Builder {
 
-        private Set<ModuleCommand> moduleCommands = new HashSet<>();
+        private List<ModuleCommand> moduleCommands = new ArrayList<>();
 
         private Builder() {
         }

@@ -46,6 +46,10 @@ public class Api {
         client.joinMeeting(servletResponse, joinCommand);
     }
 
+    public IsMeetingRunningResponse isMeetingRunning(IsMeetingRunningCommand isMeetingRunningCommand) throws Exception {
+        return client.isMeetingRunning(isMeetingRunningCommand);
+    }
+
     public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
         return client.getMeetingInfo(getMeetingInfoCommand);
     }
