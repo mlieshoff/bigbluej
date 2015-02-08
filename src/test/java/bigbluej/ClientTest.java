@@ -51,6 +51,36 @@ public class ClientTest {
             "    <message/>" +
             "</response>";
 
+    private static final String GET_MEETING_INFO_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<response>" +
+            "     <returncode>SUCCESS</returncode>" +
+            "     <meetingName>Test</meetingName>" +
+            "     <meetingID>test01</meetingID>" +
+            "     <createTime>1315254777880</createTime>" +
+            "     <voiceBridge>70775</voiceBridge>" +
+            "     <attendeePW>ap</attendeePW>" +
+            "     <moderatorPW>mp</moderatorPW>" +
+            "     <running>true</running>" +
+            "     <recording>false</recording>" +
+            "     <hasBeenForciblyEnded>false</hasBeenForciblyEnded>" +
+            "     <startTime>1315254785069</startTime>" +
+            "     <endTime>0</endTime>" +
+            "     <participantCount>1</participantCount>" +
+            "     <maxUsers>20</maxUsers>" +
+            "     <moderatorCount>1</moderatorCount>" +
+            "     <attendees>" +
+            "         <attendee>" +
+            "             <userID>1</userID>" +
+            "             <fullName>John Doe</fullName>" +
+            "             <role>MODERATOR</role>" +
+            "         </attendee>" +
+            "     </attendees>" +
+            "     <metadata/>" +
+            "     <messageKey/>" +
+            "     <message/>" +
+            "</response>";
+
     private static final String GET_MEETINGS_XML =
             "<response>" +
             "    <returncode>SUCCESS</returncode>" +
@@ -84,10 +114,48 @@ public class ClientTest {
 
     private static final String IS_MEETING_RUNNING_XML =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-                    "<response>" +
-                    "   <returncode>SUCCESS</returncode>" +
-                    "   <running>true</running>" +
-                    "</response>";
+            "<response>" +
+            "   <returncode>SUCCESS</returncode>" +
+            "   <running>true</running>" +
+            "</response>";
+
+    private static final String GET_RECORDINGS_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<response>" +
+            "   <returncode>SUCCESS</returncode>" +
+            "   <recordings>" +
+            "      <recording>" +
+            "         <recordID>183f0bf3a0982a127bdb8161-1308597520</recordID>" +
+            "         <meetingID>CS101</meetingID>" +
+            "         <name><![CDATA[On-line session for CS 101]]></name>" +
+            "         <published>false</published>" +
+            "         <startTime>34545465656</startTime>" +
+            "         <endTime>34575565465</endTime>" +
+            "         <metadata>" +
+            "            <title><![CDATA[Test Recording]]></title>" +
+            "            <subject><![CDATA[English 232 session]]></subject>" +
+            "            <description><![CDATA[First Class]]></description>" +
+            "            <creator><![CDATA[Fred Dixon]]></creator>" +
+            "            <contributor><![CDATA[Richard Alam]]></contributor>" +
+            "            <language><![CDATA[en_US]]></language>" +
+            "         </metadata>" +
+            "         <playback>" +
+            "            <format>" +
+            "               <type>simple</type>" +
+            "               <url>http://server.com/simple/playback?recordID=183f0bf3a0982a127bdb8161-1...</url>" +
+            "               <length>62</length>" +
+            "            </format>" +
+            "         </playback>" +
+            "      </recording>" +
+            "      <recording>" +
+            "         <recordID>183f0bf3a0982a127bdb8161-13085974450</recordID>" +
+            "         <meetingID>CS102</meetingID>" +
+            "         ... " +
+            "      </recording>" +
+            "   </recordings>" +
+            "   <messageKey/>" +
+            "   <message/>" +
+            "</response>";
 
     private Client client;
 
@@ -245,6 +313,17 @@ public class ClientTest {
         assertTrue(isMeetingRunningResponse.isRunning());
     }
 
+    @Test
+    public void shouldGetMeetingInfo() throws Exception {
+        when(crawler.post(anyString())).thenReturn(GET_MEETING_INFO_XML);
+        GetMeetingInfoResponse getMeetingInfoResponse = client.getMeetingInfo(GetMeetingInfoCommand.builder()
+                .meetingID("abc")
+                .password("passpass")
+                .build());
+        assertEquals(ReturnCode.SUCCESS, getMeetingInfoResponse.getReturnCode());
+        assertTrue(getMeetingInfoResponse.isRunning());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void failGetMeetingInfoWithoutCommand() throws Exception {
         client.getMeetingInfo(null);
@@ -254,6 +333,21 @@ public class ClientTest {
     public void shouldGetMeetings() throws Exception {
         when(crawler.post(anyString())).thenReturn(GET_MEETINGS_XML);
         assertEquals(2, client.getMeetings().getMeetings().size());
+    }
+
+    @Test
+    public void shouldGetRecordings() throws Exception {
+        when(crawler.post(anyString())).thenReturn(GET_RECORDINGS_XML);
+        GetRecordingsResponse getRecordingsResponse = client.getRecordings(GetRecordingsCommand.builder()
+                .meetingID("abc")
+                .build());
+        assertEquals(ReturnCode.SUCCESS, getRecordingsResponse.getReturnCode());
+        // CHECK
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failGetRecordingsWithoutCommand() throws Exception {
+        client.getRecordings(null);
     }
 
 }

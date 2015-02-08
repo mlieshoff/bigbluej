@@ -62,6 +62,10 @@ public class Api {
         return client.getMeetings();
     }
 
+    public GetRecordingsResponse getRecordings(GetRecordingsCommand getRecordingsCommand) throws Exception {
+        return client.getRecordings(getRecordingsCommand);
+    }
+
     public static Builder builder() {
         return new Builder();
     }
