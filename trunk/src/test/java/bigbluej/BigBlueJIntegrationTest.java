@@ -206,4 +206,30 @@ public class BigBlueJIntegrationTest {
         assertEquals(ReturnCode.SUCCESS, getMeetingsResponse.getReturnCode());
     }
 
+    @Test
+    public void shouldGetRecordings() throws Exception {
+        String meetingID = "myMeeting" + System.currentTimeMillis();
+        // create
+        CreateCommand createCommand = CreateCommand.builder()
+                .meetingID(meetingID)
+                .attendeePW("passpass")
+                .moderatorPW("superpass")
+                .name("myMeeting")
+                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
+                .build();
+        MeetingResponse meetingResponse = api.createMeeting(createCommand);
+        // join as moderator
+        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+        // create recordings
+
+        // get recordings
+        GetRecordingsCommand getRecordingsCommand = GetRecordingsCommand.builder()
+                .meetingID(meetingID)
+                .build();
+
+        GetRecordingsResponse getRecordingsResponse = api.getRecordings(getRecordingsCommand);
+        assertEquals(ReturnCode.SUCCESS, getRecordingsResponse.getReturnCode());
+        // CHECK
+    }
+
 }

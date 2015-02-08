@@ -141,4 +141,14 @@ public class ApiTest {
         assertEquals(getMeetingsResponse, api.getMeetings());
     }
 
+    @Test
+    public void shouldGetRecordings() throws Exception {
+        GetRecordingsResponse getRecordingsResponse = new GetRecordingsResponse();
+        GetRecordingsCommand getRecordingsCommand= GetRecordingsCommand.builder()
+                .meetingID("4711")
+                .build();
+        when(client.getRecordings(getRecordingsCommand)).thenReturn(getRecordingsResponse);
+        assertEquals(getRecordingsResponse, api.getRecordings(getRecordingsCommand));
+    }
+
 }

@@ -153,4 +153,12 @@ public class Client {
         String checksum = Checksum.create("getMeetings", "", sharedSecret);
         return fromXml(GetMeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
     }
+
+    public GetRecordingsResponse getRecordings(GetRecordingsCommand getRecordingsCommand) throws Exception {
+        Validate.notNull(getRecordingsCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getRecordingsCommand));
+        String checksum = Checksum.create("getRecordings", query, sharedSecret);
+        return fromXml(GetRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/getRecordings?" + query + "&checksum=" + checksum));
+    }
+
 }
