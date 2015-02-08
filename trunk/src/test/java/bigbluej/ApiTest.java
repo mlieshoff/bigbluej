@@ -136,9 +136,9 @@ public class ApiTest {
 
     @Test
     public void shouldGetMeetings() throws Exception {
-        MeetingsResponse meetingsResponse = new MeetingsResponse();
-        when(client.getMeetings()).thenReturn(meetingsResponse);
-        assertEquals(meetingsResponse, api.getMeetings());
+        GetMeetingsResponse getMeetingsResponse = new GetMeetingsResponse();
+        when(client.getMeetings()).thenReturn(getMeetingsResponse);
+        assertEquals(getMeetingsResponse, api.getMeetings());
     }
 
 }

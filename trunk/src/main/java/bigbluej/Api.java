@@ -58,7 +58,7 @@ public class Api {
         return client.getMeetingInfo(getMeetingInfoCommand);
     }
 
-    public MeetingsResponse getMeetings() throws Exception {
+    public GetMeetingsResponse getMeetings() throws Exception {
         return client.getMeetings();
     }
 

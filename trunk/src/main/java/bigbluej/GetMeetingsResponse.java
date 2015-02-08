@@ -25,7 +25,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MeetingsResponse extends Response {
+public class GetMeetingsResponse extends Response {
 
     @XmlElementWrapper(name = "meetings")
     @XmlElement(name = "meeting")

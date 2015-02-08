@@ -149,8 +149,8 @@ public class Client {
         return fromXml(GetMeetingInfoResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetingInfo?" + query + "&checksum=" + checksum));
     }
 
-    public MeetingsResponse getMeetings() throws Exception {
+    public GetMeetingsResponse getMeetings() throws Exception {
         String checksum = Checksum.create("getMeetings", "", sharedSecret);
-        return fromXml(MeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
+        return fromXml(GetMeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
     }
 }
