@@ -165,6 +165,30 @@ public class BigBlueJIntegrationTest {
     }
 
     @Test
+    public void shouldEnd() throws Exception {
+        String meetingID = "myMeeting" + System.currentTimeMillis();
+        // create
+        CreateCommand createCommand = CreateCommand.builder()
+                .meetingID(meetingID)
+                .attendeePW("passpass")
+                .moderatorPW("superpass")
+                .name("myMeeting")
+                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
+                .build();
+        MeetingResponse meetingResponse = api.createMeeting(createCommand);
+        // join as moderator
+        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+        EndCommand endCommand = EndCommand.builder()
+                .password("superpass")
+                .meetingID(meetingID)
+                .build();
+        EndResponse endResponse = api.end(endCommand);
+        assertEquals("sentEndMeetingRequest", endResponse.getMessageKey());
+        assertEquals("A request to end the meeting was sent.  Please wait a few seconds, and then use the getMeetingInfo or isMeetingRunning API calls to verify that it was ended.", endResponse.getMessage());
+        assertEquals(ReturnCode.SUCCESS, endResponse.getReturnCode());
+    }
+
+    @Test
     public void shouldGetMeetings() throws Exception {
         MeetingsResponse meetingsResponse = api.getMeetings();
         assertEquals(ReturnCode.SUCCESS, meetingsResponse.getReturnCode());

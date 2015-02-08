@@ -124,6 +124,17 @@ public class ApiTest {
     }
 
     @Test
+    public void shouldEnd() throws Exception {
+        EndResponse endResponse = new EndResponse();
+        EndCommand endCommand = EndCommand.builder()
+                .meetingID("4711")
+                .password("pass")
+                .build();
+        when(client.end(endCommand)).thenReturn(endResponse);
+        assertEquals(endResponse, api.end(endCommand));
+    }
+
+    @Test
     public void shouldGetMeetings() throws Exception {
         MeetingsResponse meetingsResponse = new MeetingsResponse();
         when(client.getMeetings()).thenReturn(meetingsResponse);

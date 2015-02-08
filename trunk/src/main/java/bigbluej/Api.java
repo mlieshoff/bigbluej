@@ -50,6 +50,10 @@ public class Api {
         return client.isMeetingRunning(isMeetingRunningCommand);
     }
 
+    public EndResponse end(EndCommand endCommand) throws Exception {
+        return client.end(endCommand);
+    }
+
     public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
         return client.getMeetingInfo(getMeetingInfoCommand);
     }
