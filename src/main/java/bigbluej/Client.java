@@ -135,6 +135,13 @@ public class Client {
         return fromXml(IsMeetingRunningResponse.class, crawler.post(completeUrl));
     }
 
+    public EndResponse end(EndCommand endCommand) throws Exception {
+        Validate.notNull(endCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(endCommand));
+        String checksum = Checksum.create("end", query, sharedSecret);
+        return fromXml(EndResponse.class, crawlerFactory.createCrawler().post(url + "/end?" + query + "&checksum=" + checksum));
+    }
+
     public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
         Validate.notNull(getMeetingInfoCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getMeetingInfoCommand));
