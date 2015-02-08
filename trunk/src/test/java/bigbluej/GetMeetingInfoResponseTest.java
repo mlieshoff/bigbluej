@@ -23,7 +23,7 @@ import org.junit.Test;
 import javax.xml.bind.JAXB;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * @author Michael Lieshoff
@@ -88,8 +88,88 @@ public class GetMeetingInfoResponseTest {
     }
 
     @Test
+    public void shouldHasMeetingID() {
+        assertEquals("test01", getMeetingInfoResponse.getMeetingID());
+    }
+
+    @Test
+    public void shouldHasCreateTime() {
+        assertEquals(1315254777880L, getMeetingInfoResponse.getCreateTime());
+    }
+
+    @Test
+    public void shouldHasVoiceBridge() {
+        assertEquals("70775", getMeetingInfoResponse.getVoiceBridge());
+    }
+
+    @Test
+    public void shouldHasAttendeePW() {
+        assertEquals("ap", getMeetingInfoResponse.getAttendeePW());
+    }
+
+    @Test
+    public void shouldHasModeratorPW() {
+        assertEquals("mp", getMeetingInfoResponse.getModeratorPW());
+    }
+
+    @Test
+    public void shouldIsRunning() {
+        assertTrue(getMeetingInfoResponse.isRunning());
+    }
+
+    @Test
+    public void shouldIsRecording() {
+        assertFalse(getMeetingInfoResponse.isRecording());
+    }
+
+    @Test
+    public void shouldHasBeenForciblyEnded() {
+        assertFalse(getMeetingInfoResponse.isHasBeenForciblyEnded());
+    }
+
+    @Test
+    public void shouldHasStartTime() {
+        assertEquals(1315254785069L, getMeetingInfoResponse.getStartTime());
+    }
+
+    @Test
+    public void shouldHasEndTime() {
+        assertEquals(0L, getMeetingInfoResponse.getEndTime());
+    }
+
+    @Test
     public void shouldHasParticipantCount() {
         assertEquals(1, getMeetingInfoResponse.getParticipantCount());
+    }
+
+    @Test
+    public void shouldHasMaxUsers() {
+        assertEquals(20, getMeetingInfoResponse.getMaxUsers());
+    }
+
+    @Test
+    public void shouldHasModeratorCount() {
+        assertEquals(1, getMeetingInfoResponse.getModeratorCount());
+    }
+
+    @Test
+    public void shouldHasAttendees() {
+        assertEquals(1, getMeetingInfoResponse.getAttendees().size());
+    }
+
+    @Test
+    public void shouldHasFirstAttendeesUserID() {
+        assertEquals("1", getMeetingInfoResponse.getAttendees().get(0).getUserID());
+    }
+
+    @Test
+    public void shouldHasFirstAttendeesFullName() {
+        assertEquals("John Doe", getMeetingInfoResponse.getAttendees().get(0).getFullName());
+    }
+
+    @Test
+    public void shouldHasFirstAttendeesRole() {
+        assertEquals("MODERATOR", getMeetingInfoResponse.getAttendees().get(0).getRole());
     }
 
 }
