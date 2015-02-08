@@ -25,8 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Michael Lieshoff
@@ -133,8 +132,24 @@ public class BigBlueJIntegrationTest {
                 .password("superpass")
                 .build();
         GetMeetingInfoResponse getMeetingInfoResponse = api.getMeetingInfo(getMeetingInfoCommand);
-        checkGetMeetingInfoResponse(getMeetingInfoCommand, getMeetingInfoResponse);
-        System.out.println("--> " + getMeetingInfoResponse);
+
+        assertEquals(ReturnCode.SUCCESS, getMeetingInfoResponse.getReturnCode());
+        assertEquals(getMeetingInfoCommand.getMeetingID(), getMeetingInfoResponse.getMeetingID());
+        assertEquals(createCommand.getModeratorPW(), getMeetingInfoResponse.getModeratorPW());
+        assertEquals(createCommand.getAttendeePW(), getMeetingInfoResponse.getAttendeePW());
+        assertTrue(getMeetingInfoResponse.getCreateTime() > 0);
+        assertTrue(getMeetingInfoResponse.getStartTime() > 0);
+        assertEquals(0, getMeetingInfoResponse.getEndTime());
+        assertNotNull(getMeetingInfoResponse.getVoiceBridge());
+        assertEquals(20, getMeetingInfoResponse.getMaxUsers());
+        assertFalse(getMeetingInfoResponse.isHasBeenForciblyEnded());
+        assertFalse(getMeetingInfoResponse.isRecording());
+
+        // ???
+        assertEquals(1, getMeetingInfoResponse.getAttendees());
+        assertEquals(1, getMeetingInfoResponse.getModeratorCount());
+        assertEquals(1, getMeetingInfoResponse.getParticipantCount());
+        assertTrue(getMeetingInfoResponse.isRunning());
     }
 
     @Test
@@ -152,16 +167,13 @@ public class BigBlueJIntegrationTest {
         // join as moderator
         String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
         System.out.println("result> " + result);
+        // check is meeting running
         IsMeetingRunningCommand isMeetingRunningCommand = IsMeetingRunningCommand.builder()
                 .meetingID(meetingResponse.getMeetingID())
                 .build();
         IsMeetingRunningResponse isMeetingRunningResponse = api.isMeetingRunning(isMeetingRunningCommand);
         assertEquals(ReturnCode.SUCCESS, isMeetingRunningResponse.getReturnCode());
         assertTrue(isMeetingRunningResponse.isRunning());
-    }
-
-    private void checkGetMeetingInfoResponse(GetMeetingInfoCommand getMeetingInfoCommand, GetMeetingInfoResponse getMeetingInfoResponse) {
-        assertEquals(ReturnCode.SUCCESS, getMeetingInfoResponse.getReturnCode());
     }
 
     @Test
