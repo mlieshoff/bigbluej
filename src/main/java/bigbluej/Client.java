@@ -161,4 +161,11 @@ public class Client {
         return fromXml(GetRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/getRecordings?" + query + "&checksum=" + checksum));
     }
 
+    public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) throws Exception {
+        Validate.notNull(publishRecordingsCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(publishRecordingsCommand));
+        String checksum = Checksum.create("getRecordings", query, sharedSecret);
+        return fromXml(PublishRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/publishRecordings?" + query + "&checksum=" + checksum));
+    }
+
 }
