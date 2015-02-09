@@ -168,4 +168,11 @@ public class Client {
         return fromXml(PublishRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/publishRecordings?" + query + "&checksum=" + checksum));
     }
 
+    public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) throws Exception {
+        Validate.notNull(deleteRecordingsCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(deleteRecordingsCommand));
+        String checksum = Checksum.create("getRecordings", query, sharedSecret);
+        return fromXml(DeleteRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/deleteRecordings?" + query + "&checksum=" + checksum));
+    }
+
 }

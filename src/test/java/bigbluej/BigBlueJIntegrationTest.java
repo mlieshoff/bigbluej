@@ -17,7 +17,6 @@ package bigbluej;
  * limitations under the License.
  */
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
@@ -271,5 +270,41 @@ public class BigBlueJIntegrationTest {
         // CHECK
     }
 
+    @Test
+    public void shouldDeleteRecordings() throws Exception {
+        String meetingID = "myMeeting" + System.currentTimeMillis();
+        // create
+        CreateCommand createCommand = CreateCommand.builder()
+                .meetingID(meetingID)
+                .attendeePW("passpass")
+                .moderatorPW("superpass")
+                .name("myMeeting")
+                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
+                .build();
+        MeetingResponse meetingResponse = api.createMeeting(createCommand);
+        // join as moderator
+        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+        // create recordings
+
+        // publish recordings
+        String recordID = "recordID_" + meetingID;
+        PublishRecordingsCommand publishRecordingsCommand = PublishRecordingsCommand.builder()
+                .recordID(recordID)
+                .publish(true)
+                .build();
+
+        PublishRecordingsResponse publishRecordingsResponse = api.publishRecordings(publishRecordingsCommand);
+        assertEquals(ReturnCode.SUCCESS, publishRecordingsResponse.getReturnCode());
+
+        // delete recordings
+        DeleteRecordingsCommand deleteRecordingsCommand = DeleteRecordingsCommand.builder()
+                .recordID(recordID)
+                .build();
+
+        DeleteRecordingsResponse deleteRecordingsResponse = api.deleteRecordings(deleteRecordingsCommand);
+        assertEquals(ReturnCode.SUCCESS, deleteRecordingsResponse.getReturnCode());
+        assertTrue(deleteRecordingsResponse.isDeleted());
+        // CHECK
+    }
 
 }
