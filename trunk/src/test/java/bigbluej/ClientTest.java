@@ -17,6 +17,7 @@ package bigbluej;
  * limitations under the License.
  */
 
+import bigbluej.config.Config;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -26,6 +27,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -169,6 +171,34 @@ public class ClientTest {
             "<response>" +
             "   <returncode>SUCCESS</returncode>" +
             "   <deleted>true</deleted>" +
+            "</response>";
+
+    private static final String GET_DEFAULT_CONFIG_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<config>" +
+            "    <localeversion suppressWarning=\"false\">0.9.0</localeversion>" +
+            "    <version>211</version>" +
+            "    <help url=\"http://test-install.blindsidenetworks.com/help.html\" />" +
+            "    <javaTest url=\"http://test-install.blindsidenetworks.com/testjava.html\" />" +
+            "    <porttest host=\"test-install.blindsidenetworks.com\" application=\"video/portTest\" timeout=\"10000\" />" +
+            "    <bwMon server=\"test-install.blindsidenetworks.com\" application=\"video/bwTest\" />" +
+            "    <application uri=\"rtmp://test-install.blindsidenetworks.com/bigbluebutton\" host=\"http://test-install.blindsidenetworks.com/bigbluebutton/api/enter\" />" +
+            "    <language userSelectionEnabled=\"true\" />" +
+            "    <skinning enabled=\"true\" url=\"http://test-install.blindsidenetworks.com/client/branding/css/BBBDefault.css.swf\" />" +
+            "    <shortcutKeys showButton=\"true\" />" +
+            "    <browserVersions chrome=\"39\" firefox=\"35\" flash=\"16\" java=\"1.7.0_51\" />" +
+            "    <layout showLogButton=\"false\" showVideoLayout=\"false\" showResetLayout=\"true\" defaultLayout=\"bbb.layout.name.defaultlayout\" showToolbar=\"true\" showFooter=\"true\" showMeetingName=\"true\" showHelpButton=\"true\" showLogoutWindow=\"true\" showLayoutTools=\"true\" showNetworkMonitor=\"false\" confirmLogout=\"true\" showRecordingNotification=\"true\" />" +
+            "    <lock allowModeratorLocking=\"false\" disableCamForLockedUsers=\"false\" disableMicForLockedUsers=\"false\" disablePrivateChatForLockedUsers=\"false\" disablePublicChatForLockedUsers=\"false\" lockLayoutForLockedUsers=\"false\" />" +
+            "    <modules>" +
+            "        <module name=\"ChatModule\" url=\"http://test-install.blindsidenetworks.com/client/ChatModule.swf?v=211\" uri=\"rtmp://test-install.blindsidenetworks.com/bigbluebutton\" dependsOn=\"UsersModule\" privateEnabled=\"true\" fontSize=\"12\" position=\"top-right\" baseTabIndex=\"701\" colorPickerIsVisible=\"false\" />" +
+            "        <module name=\"UsersModule\" url=\"http://test-install.blindsidenetworks.com/client/UsersModule.swf?v=211\" uri=\"rtmp://test-install.blindsidenetworks.com/bigbluebutton\" allowKickUser=\"true\" enableRaiseHand=\"true\" enableSettingsButton=\"true\" baseTabIndex=\"301\" />" +
+            "    </modules>" +
+            "</config>";
+
+    private static final String SET_CONFIG_XML =
+            "<response>" +
+            "   <returncode>SUCCESS</returncode>" +
+            "   <token>asdfl234kjasdfsadfy</token>" +
             "</response>";
 
     private Client client;
@@ -392,6 +422,26 @@ public class ClientTest {
                 .recordID("abc")
                 .build());
         assertEquals(ReturnCode.SUCCESS, deleteRecordingsResponse.getReturnCode());
+        // CHECK
+    }
+
+    @Test
+    public void shouldGetDefaultConfigXML() throws Exception {
+        when(crawler.post(anyString())).thenReturn(GET_DEFAULT_CONFIG_XML);
+        Config config = client.getDefaultConfigXML();
+        assertNotNull(config);
+        assertEquals("0.9.0", config.getLocaleVersion().getValue());
+    }
+
+    @Test
+    public void shouldSetConfigXML() throws Exception {
+        when(crawler.post(anyString(), anyString())).thenReturn(SET_CONFIG_XML);
+        SetConfigXMLCommand setConfigXMLCommand = SetConfigXMLCommand.builder()
+                .config(new Config())
+                .meetingID("abc")
+                .build();
+        SetConfigXMLResponse setConfigXMLResponse = client.setConfigXML(setConfigXMLCommand);
+        assertNotNull(setConfigXMLResponse);
         // CHECK
     }
 

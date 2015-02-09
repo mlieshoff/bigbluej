@@ -17,6 +17,7 @@ package bigbluej;
  * limitations under the License.
  */
 
+import bigbluej.config.Config;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -170,6 +171,25 @@ public class ApiTest {
                 .build();
         when(client.deleteRecordings(deleteRecordingsCommand)).thenReturn(deleteRecordingsResponse);
         assertEquals(deleteRecordingsResponse, api.deleteRecordings(deleteRecordingsCommand));
+    }
+
+    @Test
+    public void shouldGetDefaultConfigXML() throws Exception {
+        Config config = new Config();
+        when(client.getDefaultConfigXML()).thenReturn(config);
+        assertEquals(config, api.getDefaultConfigXML());
+    }
+
+    @Test
+    public void shouldSetConfigXML() throws Exception {
+        Config config = new Config();
+        SetConfigXMLResponse setConfigXMLResponse = new SetConfigXMLResponse();
+        SetConfigXMLCommand setConfigXMLCommand = SetConfigXMLCommand.builder()
+                .config(config)
+                .meetingID("abc")
+                .build();
+        when(client.setConfigXML(setConfigXMLCommand)).thenReturn(setConfigXMLResponse);
+        assertEquals(setConfigXMLResponse, api.setConfigXML(setConfigXMLCommand));
     }
 
 }

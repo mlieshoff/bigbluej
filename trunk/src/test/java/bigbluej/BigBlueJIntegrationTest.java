@@ -17,6 +17,7 @@ package bigbluej;
  * limitations under the License.
  */
 
+import bigbluej.config.Config;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
@@ -305,6 +306,42 @@ public class BigBlueJIntegrationTest {
         assertEquals(ReturnCode.SUCCESS, deleteRecordingsResponse.getReturnCode());
         assertTrue(deleteRecordingsResponse.isDeleted());
         // CHECK
+    }
+
+    @Test
+    public void shouldGetDefaultConfigXML() throws Exception {
+        assertNotNull(api.getDefaultConfigXML());
+        // CHECK
+    }
+
+    @Test
+    public void shouldSetConfigXML() throws Exception {
+        String meetingID = "myMeeting" + System.currentTimeMillis();
+        // create
+        CreateCommand createCommand = CreateCommand.builder()
+                .meetingID(meetingID)
+                .attendeePW("passpass")
+                .moderatorPW("superpass")
+                .name("myMeeting")
+                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
+                .build();
+        api.createMeeting(createCommand);
+
+        // get config xml
+
+        Config config = api.getDefaultConfigXML();
+
+        // set config xml
+        SetConfigXMLCommand setConfigXMLCommand = SetConfigXMLCommand.builder()
+                .meetingID(meetingID)
+                .config(config)
+                .build();
+        SetConfigXMLResponse setConfigXMLResponse = api.setConfigXML(setConfigXMLCommand);
+        assertEquals(ReturnCode.SUCCESS, setConfigXMLResponse.getReturnCode());
+
+        System.out.println(setConfigXMLResponse.toString());
+
+        assertNotNull(setConfigXMLResponse.getToken());
     }
 
 }
