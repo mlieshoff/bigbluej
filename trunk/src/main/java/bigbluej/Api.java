@@ -66,6 +66,10 @@ public class Api {
         return client.getRecordings(getRecordingsCommand);
     }
 
+    public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) throws Exception {
+        return client.publishRecordings(publishRecordingsCommand);
+    }
+
     public static Builder builder() {
         return new Builder();
     }

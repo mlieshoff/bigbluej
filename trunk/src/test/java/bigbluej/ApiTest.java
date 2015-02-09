@@ -144,11 +144,22 @@ public class ApiTest {
     @Test
     public void shouldGetRecordings() throws Exception {
         GetRecordingsResponse getRecordingsResponse = new GetRecordingsResponse();
-        GetRecordingsCommand getRecordingsCommand= GetRecordingsCommand.builder()
+        GetRecordingsCommand getRecordingsCommand = GetRecordingsCommand.builder()
                 .meetingID("4711")
                 .build();
         when(client.getRecordings(getRecordingsCommand)).thenReturn(getRecordingsResponse);
         assertEquals(getRecordingsResponse, api.getRecordings(getRecordingsCommand));
+    }
+
+    @Test
+    public void shouldPublishRecordings() throws Exception {
+        PublishRecordingsResponse publishRecordingsResponse = new PublishRecordingsResponse();
+        PublishRecordingsCommand publishRecordingsCommand = PublishRecordingsCommand.builder()
+                .recordID("4711")
+                .publish(true)
+                .build();
+        when(client.publishRecordings(publishRecordingsCommand)).thenReturn(publishRecordingsResponse);
+        assertEquals(publishRecordingsResponse, api.publishRecordings(publishRecordingsCommand));
     }
 
 }
