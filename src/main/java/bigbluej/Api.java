@@ -17,6 +17,7 @@ package bigbluej;
  * limitations under the License.
  */
 
+import bigbluej.config.Config;
 import org.apache.commons.lang.Validate;
 
 import javax.servlet.ServletResponse;
@@ -76,6 +77,14 @@ public class Api {
 
     public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) throws Exception {
         return client.deleteRecordings(deleteRecordingsCommand);
+    }
+
+    public Config getDefaultConfigXML() throws Exception {
+        return client.getDefaultConfigXML();
+    }
+
+    public SetConfigXMLResponse setConfigXML(SetConfigXMLCommand setConfigXMLCommand) throws Exception {
+        return client.setConfigXML(setConfigXMLCommand);
     }
 
     public static class Builder {

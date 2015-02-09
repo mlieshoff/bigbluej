@@ -17,6 +17,7 @@ package bigbluej;
  * limitations under the License.
  */
 
+import bigbluej.config.Config;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -173,6 +174,35 @@ public class Client {
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(deleteRecordingsCommand));
         String checksum = Checksum.create("getRecordings", query, sharedSecret);
         return fromXml(DeleteRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/deleteRecordings?" + query + "&checksum=" + checksum));
+    }
+
+    public Config getDefaultConfigXML() throws Exception {
+        String checksum = Checksum.create("getDefaultConfigXML", "", sharedSecret);
+        return fromXml(Config.class, crawlerFactory.createCrawler().post(url + "/getDefaultConfigXML?checksum=" + checksum));
+    }
+
+    public SetConfigXMLResponse setConfigXML(SetConfigXMLCommand setConfigXMLCommand) throws Exception {
+        Validate.notNull(setConfigXMLCommand);
+        StringBuilder body = new StringBuilder();
+        body.append("configXML=");
+        body.append(toXml(setConfigXMLCommand.getConfig()));
+        body.append("&");
+        body.append("meetingID=");
+        body.append(setConfigXMLCommand.getMeetingID());
+        System.out.println("body> " + body);
+
+        String checksum = Checksum.create("setConfigXML", body.toString(), sharedSecret);
+        String completeUrl = url + "/setConfigXML?checksum=" + checksum;
+        System.out.println("url> " + completeUrl);
+
+        Crawler crawler = crawlerFactory.createCrawler();
+        return fromXml(SetConfigXMLResponse.class, crawler.post(completeUrl, body.toString()));
+    }
+
+    private String toXml(Config config) {
+        StringWriter stringWriter = new StringWriter();
+        JAXB.marshal(config, stringWriter);
+        return stringWriter.getBuffer().toString();
     }
 
 }
