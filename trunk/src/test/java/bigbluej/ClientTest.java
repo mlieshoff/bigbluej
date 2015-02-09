@@ -157,6 +157,20 @@ public class ClientTest {
             "   <message/>" +
             "</response>";
 
+    private static final String PUBLISH_RECORDINGS_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<response>" +
+            "   <returncode>SUCCESS</returncode>" +
+            "   <published>true</published>" +
+            "</response>";
+
+    private static final String DELETE_RECORDINGS_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<response>" +
+            "   <returncode>SUCCESS</returncode>" +
+            "   <deleted>true</deleted>" +
+            "</response>";
+
     private Client client;
 
     private CrawlerFactory crawlerFactory;
@@ -335,6 +349,11 @@ public class ClientTest {
         assertEquals(2, client.getMeetings().getMeetings().size());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void failGetRecordingsWithoutCommand() throws Exception {
+        client.getRecordings(null);
+    }
+
     @Test
     public void shouldGetRecordings() throws Exception {
         when(crawler.post(anyString())).thenReturn(GET_RECORDINGS_XML);
@@ -346,8 +365,34 @@ public class ClientTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void failGetRecordingsWithoutCommand() throws Exception {
+    public void failPublishRecordingsWithoutCommand() throws Exception {
+        client.publishRecordings(null);
+    }
+
+    @Test
+    public void shouldPublishRecordings() throws Exception {
+        when(crawler.post(anyString())).thenReturn(PUBLISH_RECORDINGS_XML);
+        PublishRecordingsResponse publishRecordingsResponse = client.publishRecordings(PublishRecordingsCommand.builder()
+                .recordID("abc")
+                .publish(true)
+                .build());
+        assertEquals(ReturnCode.SUCCESS, publishRecordingsResponse.getReturnCode());
+        // CHECK
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failDeleteRecordingsWithoutCommand() throws Exception {
         client.getRecordings(null);
+    }
+
+    @Test
+    public void shouldDeleteRecordings() throws Exception {
+        when(crawler.post(anyString())).thenReturn(DELETE_RECORDINGS_XML);
+        DeleteRecordingsResponse deleteRecordingsResponse = client.deleteRecordings(DeleteRecordingsCommand.builder()
+                .recordID("abc")
+                .build());
+        assertEquals(ReturnCode.SUCCESS, deleteRecordingsResponse.getReturnCode());
+        // CHECK
     }
 
 }

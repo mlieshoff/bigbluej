@@ -74,6 +74,10 @@ public class Api {
         return new Builder();
     }
 
+    public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) throws Exception {
+        return client.deleteRecordings(deleteRecordingsCommand);
+    }
+
     public static class Builder {
 
         private String url;

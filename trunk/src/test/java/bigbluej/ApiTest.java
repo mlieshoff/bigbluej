@@ -162,4 +162,14 @@ public class ApiTest {
         assertEquals(publishRecordingsResponse, api.publishRecordings(publishRecordingsCommand));
     }
 
+    @Test
+    public void shouldDeleteRecordings() throws Exception {
+        DeleteRecordingsResponse deleteRecordingsResponse = new DeleteRecordingsResponse();
+        DeleteRecordingsCommand deleteRecordingsCommand = DeleteRecordingsCommand.builder()
+                .recordID("4711")
+                .build();
+        when(client.deleteRecordings(deleteRecordingsCommand)).thenReturn(deleteRecordingsResponse);
+        assertEquals(deleteRecordingsResponse, api.deleteRecordings(deleteRecordingsCommand));
+    }
+
 }
