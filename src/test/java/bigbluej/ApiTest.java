@@ -192,4 +192,16 @@ public class ApiTest {
         assertEquals(setConfigXMLResponse, api.setConfigXML(setConfigXMLCommand));
     }
 
+    @Test
+    public void shouldGetJoinMeetingUrl() throws Exception {
+        String url = "url";
+        JoinCommand joinCommand = JoinCommand.builder()
+                .meetingID("4711")
+                .password("abc")
+                .fullName("Al Bundy")
+                .build();
+        when(client.getJoinMeetingUrl(joinCommand)).thenReturn(url);
+        assertEquals(url, api.getJoinMeetingUrl(joinCommand));
+    }
+
 }

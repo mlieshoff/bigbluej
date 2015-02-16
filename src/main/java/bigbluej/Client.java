@@ -205,4 +205,11 @@ public class Client {
         return stringWriter.getBuffer().toString();
     }
 
+    public String getJoinMeetingUrl(JoinCommand joinCommand) throws Exception {
+        Validate.notNull(joinCommand);
+        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
+        String checksum = Checksum.create("join", query, sharedSecret);
+        return url + "/join?" + query + "&checksum=" + checksum;
+    }
+
 }

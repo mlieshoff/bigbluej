@@ -87,6 +87,10 @@ public class Api {
         return client.setConfigXML(setConfigXMLCommand);
     }
 
+    public String getJoinMeetingUrl(JoinCommand joinCommand) throws Exception {
+        return client.getJoinMeetingUrl(joinCommand);
+    }
+
     public static class Builder {
 
         private String url;

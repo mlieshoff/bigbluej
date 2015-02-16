@@ -445,4 +445,14 @@ public class ClientTest {
         // CHECK
     }
 
+    @Test
+    public void shouldGetJoinMeetingUrl() throws Exception {
+        JoinCommand joinCommand = JoinCommand.builder()
+                .meetingID("4711")
+                .password("abc")
+                .fullName("Al Bundy")
+                .build();
+        assertNotNull(client.getJoinMeetingUrl(joinCommand));
+    }
+
 }

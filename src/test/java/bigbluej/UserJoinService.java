@@ -29,8 +29,10 @@ public class UserJoinService extends HttpServlet {
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         Api api = Api.builder()
-                .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
-                .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
+                .url("http://bilduin.dyndns.org/bigbluebutton/api")
+//                .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
+//                .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
+                .sharedSecret("426e6d6853360c629745320063d247cd")
                 .build();
 
         String meetingID = req.getParameter("meetingID");
