@@ -45,8 +45,10 @@ public class BigBlueJIntegrationTest {
     @Before
     public void setUp() throws Exception {
         api = Api.builder()
-                .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
-                .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
+//                .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
+                .url("http://bilduin.dyndns.org/bigbluebutton/api")
+//                .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
+                .sharedSecret("426e6d6853360c629745320063d247cd")
                 .build();
         server = new Server(8080);
         ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/my-app", true, false);
@@ -342,6 +344,18 @@ public class BigBlueJIntegrationTest {
         System.out.println(setConfigXMLResponse.toString());
 
         assertNotNull(setConfigXMLResponse.getToken());
+    }
+
+    @Test
+    public void shouldGetJoinMeetingUrl() throws Exception {
+        String meetingID = "myMeeting" + System.currentTimeMillis();
+        JoinCommand joinCommand = JoinCommand.builder()
+                .fullName("Al Bundy")
+                .meetingID(meetingID)
+                .password("passpass")
+                .build();
+
+        assertNotNull(api.getJoinMeetingUrl(joinCommand));
     }
 
 }
