@@ -4,7 +4,7 @@
     <groupId>org.mili</groupId>
     <artifactId>bigbluej</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>nod</name>
     <url>http://maven.apache.org</url>
     <inceptionYear>2015</inceptionYear>
@@ -161,8 +161,7 @@
         <repository>
             <id>org-mili-repo-releases</id>
             <name>Maven Repo for org.mili (releases)</name>
-            <url>svn:https://org-mili-repo.googlecode.com/svn/maven-repo/snapshots</url>
-            <!--url>svn:https://org-mili-repo.googlecode.com/svn/maven-repo/releases</url-->
+            <url>svn:https://org-mili-repo.googlecode.com/svn/maven-repo/releases</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
         <snapshotRepository>

@@ -159,20 +159,20 @@ public class Client {
         Validate.notNull(getRecordingsCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getRecordingsCommand));
         String checksum = Checksum.create("getRecordings", query, sharedSecret);
-        return fromXml(GetRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/getRecordings?" + query + "&checksum=" + checksum));
+        return fromXml(GetRecordingsResponse.class, crawlerFactory.createCrawler().get(url + "/getRecordings?" + query + "&checksum=" + checksum));
     }
 
     public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) throws Exception {
         Validate.notNull(publishRecordingsCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(publishRecordingsCommand));
-        String checksum = Checksum.create("getRecordings", query, sharedSecret);
+        String checksum = Checksum.create("publishRecordings", query, sharedSecret);
         return fromXml(PublishRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/publishRecordings?" + query + "&checksum=" + checksum));
     }
 
     public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) throws Exception {
         Validate.notNull(deleteRecordingsCommand);
         String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(deleteRecordingsCommand));
-        String checksum = Checksum.create("getRecordings", query, sharedSecret);
+        String checksum = Checksum.create("deleteRecordings", query, sharedSecret);
         return fromXml(DeleteRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/deleteRecordings?" + query + "&checksum=" + checksum));
     }
 
