@@ -26,10 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Michael Lieshoff
@@ -45,10 +42,10 @@ public class BigBlueJIntegrationTest {
     @Before
     public void setUp() throws Exception {
         api = Api.builder()
-//                .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
-                .url("http://bilduin.dyndns.org/bigbluebutton/api")
-//                .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
-                .sharedSecret("426e6d6853360c629745320063d247cd")
+                .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
+//                .url("http://bilduin.dyndns.org/bigbluebutton/api")
+                .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
+//                .sharedSecret("426e6d6853360c629745320063d247cd")
                 .build();
         server = new Server(8080);
         ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/my-app", true, false);
@@ -214,19 +211,7 @@ public class BigBlueJIntegrationTest {
 
     @Test
     public void shouldGetRecordings() throws Exception {
-        String meetingID = "myMeeting" + System.currentTimeMillis();
-        // create
-        CreateCommand createCommand = CreateCommand.builder()
-                .meetingID(meetingID)
-                .attendeePW("passpass")
-                .moderatorPW("superpass")
-                .name("myMeeting")
-                .welcome("<br>Welcome to <b>%%CONFNAME%%</b>!")
-                .build();
-        MeetingResponse meetingResponse = api.createMeeting(createCommand);
-        // join as moderator
-        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
-        // create recordings
+        String meetingID = "4713";
 
         // get recordings
         GetRecordingsCommand getRecordingsCommand = GetRecordingsCommand.builder()
