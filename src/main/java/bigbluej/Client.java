@@ -18,6 +18,7 @@ package bigbluej;
  */
 
 import bigbluej.config.Config;
+import bigbluej.exception.ClientException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -51,13 +52,17 @@ public class Client {
         this.sharedSecret = sharedSecret;
     }
 
-    public MeetingResponse createMeeting(CreateCommand createCommand) throws Exception {
-        Validate.notNull(createCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
-        String checksum = Checksum.create("create", query, sharedSecret);
-        String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
-        Crawler crawler = crawlerFactory.createCrawler();
-        return fromXml(MeetingResponse.class, crawler.post(completeUrl));
+    public MeetingResponse createMeeting(CreateCommand createCommand) {
+        try {
+            Validate.notNull(createCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
+            String checksum = Checksum.create("create", query, sharedSecret);
+            String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
+            Crawler crawler = crawlerFactory.createCrawler();
+            return fromXml(MeetingResponse.class, crawler.post(completeUrl));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
     private <T> T fromXml(Class<T> clazz, String input) {
@@ -65,7 +70,7 @@ public class Client {
         return JAXB.unmarshal(new StringReader(input), clazz);
     }
 
-    public static String toQuery(SortedMap<String, Object> sortedParameterMap) throws UnsupportedEncodingException {
+    static String toQuery(SortedMap<String, Object> sortedParameterMap) throws UnsupportedEncodingException {
         Validate.notNull(sortedParameterMap);
         StringBuilder s = new StringBuilder();
         for (Iterator<Map.Entry<String, Object>> iterator = sortedParameterMap.entrySet().iterator(); iterator.hasNext(); ) {
@@ -78,16 +83,20 @@ public class Client {
         return s.toString();
     }
 
-    public MeetingResponse createMeeting(CreateCommand createCommand, ModulesCommand modulesCommand) throws Exception {
-        Validate.notNull(createCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
-        String checksum = Checksum.create("create", query, sharedSecret);
-        String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
-        System.out.println("url> " + completeUrl);
-        String body = toXml(modulesCommand);
-        System.out.println("body> " + body);
-        Crawler crawler = crawlerFactory.createCrawler();
-        return fromXml(MeetingResponse.class, crawler.post(completeUrl, body));
+    public MeetingResponse createMeeting(CreateCommand createCommand, ModulesCommand modulesCommand) {
+        try {
+            Validate.notNull(createCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(createCommand));
+            String checksum = Checksum.create("create", query, sharedSecret);
+            String completeUrl = url + "/create?" + query + "&checksum=" + checksum;
+            System.out.println("url> " + completeUrl);
+            String body = toXml(modulesCommand);
+            System.out.println("body> " + body);
+            Crawler crawler = crawlerFactory.createCrawler();
+            return fromXml(MeetingResponse.class, crawler.post(completeUrl, body));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
     private String toXml(ModulesCommand modulesCommand) {
@@ -114,89 +123,129 @@ public class Client {
         return stringWriter.getBuffer().toString();
     }
 
-    public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) throws Exception {
-        Validate.notNull(joinCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
-        String checksum = Checksum.create("join", query, sharedSecret);
-        if (servletResponse instanceof HttpServletResponse) {
-            String redirectUrl = url + "/join?" + query + "&checksum=" + checksum;
-            System.out.println("redirect> " + redirectUrl);
-            HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-            httpServletResponse.sendRedirect(redirectUrl);
-            httpServletResponse.setStatus(200);
+    public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) {
+        try {
+            Validate.notNull(joinCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
+            String checksum = Checksum.create("join", query, sharedSecret);
+            if (servletResponse instanceof HttpServletResponse) {
+                String redirectUrl = url + "/join?" + query + "&checksum=" + checksum;
+                System.out.println("redirect> " + redirectUrl);
+                HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+                httpServletResponse.sendRedirect(redirectUrl);
+                httpServletResponse.setStatus(200);
+            }
+        } catch (Exception e) {
+            throw new ClientException(e);
         }
     }
 
-    public IsMeetingRunningResponse isMeetingRunning(IsMeetingRunningCommand isMeetingRunningCommand) throws Exception {
-        Validate.notNull(isMeetingRunningCommand, "isMeetingRunningCommand");
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(isMeetingRunningCommand));
-        String checksum = Checksum.create("isMeetingRunning", query, sharedSecret);
-        String completeUrl = url + "/isMeetingRunning?" + query + "&checksum=" + checksum;
-        Crawler crawler = crawlerFactory.createCrawler();
-        return fromXml(IsMeetingRunningResponse.class, crawler.post(completeUrl));
+    public IsMeetingRunningResponse isMeetingRunning(IsMeetingRunningCommand isMeetingRunningCommand) {
+        try {
+            Validate.notNull(isMeetingRunningCommand, "isMeetingRunningCommand");
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(isMeetingRunningCommand));
+            String checksum = Checksum.create("isMeetingRunning", query, sharedSecret);
+            String completeUrl = url + "/isMeetingRunning?" + query + "&checksum=" + checksum;
+            Crawler crawler = crawlerFactory.createCrawler();
+            return fromXml(IsMeetingRunningResponse.class, crawler.post(completeUrl));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public EndResponse end(EndCommand endCommand) throws Exception {
-        Validate.notNull(endCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(endCommand));
-        String checksum = Checksum.create("end", query, sharedSecret);
-        return fromXml(EndResponse.class, crawlerFactory.createCrawler().post(url + "/end?" + query + "&checksum=" + checksum));
+    public EndResponse end(EndCommand endCommand) {
+        try {
+            Validate.notNull(endCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(endCommand));
+            String checksum = Checksum.create("end", query, sharedSecret);
+            return fromXml(EndResponse.class, crawlerFactory.createCrawler().post(url + "/end?" + query + "&checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
-        Validate.notNull(getMeetingInfoCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getMeetingInfoCommand));
-        String checksum = Checksum.create("getMeetingInfo", query, sharedSecret);
-        return fromXml(GetMeetingInfoResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetingInfo?" + query + "&checksum=" + checksum));
+    public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) {
+        try {
+            Validate.notNull(getMeetingInfoCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getMeetingInfoCommand));
+            String checksum = Checksum.create("getMeetingInfo", query, sharedSecret);
+            return fromXml(GetMeetingInfoResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetingInfo?" + query + "&checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public GetMeetingsResponse getMeetings() throws Exception {
-        String checksum = Checksum.create("getMeetings", "", sharedSecret);
-        return fromXml(GetMeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
+    public GetMeetingsResponse getMeetings() {
+        try {
+            String checksum = Checksum.create("getMeetings", "", sharedSecret);
+            return fromXml(GetMeetingsResponse.class, crawlerFactory.createCrawler().post(url + "/getMeetings?checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public GetRecordingsResponse getRecordings(GetRecordingsCommand getRecordingsCommand) throws Exception {
-        Validate.notNull(getRecordingsCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getRecordingsCommand));
-        String checksum = Checksum.create("getRecordings", query, sharedSecret);
-        return fromXml(GetRecordingsResponse.class, crawlerFactory.createCrawler().get(url + "/getRecordings?" + query + "&checksum=" + checksum));
+    public GetRecordingsResponse getRecordings(GetRecordingsCommand getRecordingsCommand) {
+        try {
+            Validate.notNull(getRecordingsCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(getRecordingsCommand));
+            String checksum = Checksum.create("getRecordings", query, sharedSecret);
+            return fromXml(GetRecordingsResponse.class, crawlerFactory.createCrawler().get(url + "/getRecordings?" + query + "&checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) throws Exception {
-        Validate.notNull(publishRecordingsCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(publishRecordingsCommand));
-        String checksum = Checksum.create("publishRecordings", query, sharedSecret);
-        return fromXml(PublishRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/publishRecordings?" + query + "&checksum=" + checksum));
+    public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) {
+        try {
+            Validate.notNull(publishRecordingsCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(publishRecordingsCommand));
+            String checksum = Checksum.create("publishRecordings", query, sharedSecret);
+            return fromXml(PublishRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/publishRecordings?" + query + "&checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) throws Exception {
-        Validate.notNull(deleteRecordingsCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(deleteRecordingsCommand));
-        String checksum = Checksum.create("deleteRecordings", query, sharedSecret);
-        return fromXml(DeleteRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/deleteRecordings?" + query + "&checksum=" + checksum));
+    public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) {
+        try {
+            Validate.notNull(deleteRecordingsCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(deleteRecordingsCommand));
+            String checksum = Checksum.create("deleteRecordings", query, sharedSecret);
+            return fromXml(DeleteRecordingsResponse.class, crawlerFactory.createCrawler().post(url + "/deleteRecordings?" + query + "&checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public Config getDefaultConfigXML() throws Exception {
-        String checksum = Checksum.create("getDefaultConfigXML", "", sharedSecret);
-        return fromXml(Config.class, crawlerFactory.createCrawler().post(url + "/getDefaultConfigXML?checksum=" + checksum));
+    public Config getDefaultConfigXML() {
+        try {
+            String checksum = Checksum.create("getDefaultConfigXML", "", sharedSecret);
+            return fromXml(Config.class, crawlerFactory.createCrawler().post(url + "/getDefaultConfigXML?checksum=" + checksum));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
-    public SetConfigXMLResponse setConfigXML(SetConfigXMLCommand setConfigXMLCommand) throws Exception {
-        Validate.notNull(setConfigXMLCommand);
-        StringBuilder body = new StringBuilder();
-        body.append("configXML=");
-        body.append(toXml(setConfigXMLCommand.getConfig()));
-        body.append("&");
-        body.append("meetingID=");
-        body.append(setConfigXMLCommand.getMeetingID());
-        System.out.println("body> " + body);
+    public SetConfigXMLResponse setConfigXML(SetConfigXMLCommand setConfigXMLCommand) {
+        try {
+            Validate.notNull(setConfigXMLCommand);
+            StringBuilder body = new StringBuilder();
+            body.append("configXML=");
+            body.append(toXml(setConfigXMLCommand.getConfig()));
+            body.append("&");
+            body.append("meetingID=");
+            body.append(setConfigXMLCommand.getMeetingID());
+            System.out.println("body> " + body);
 
-        String checksum = Checksum.create("setConfigXML", body.toString(), sharedSecret);
-        String completeUrl = url + "/setConfigXML?checksum=" + checksum;
-        System.out.println("url> " + completeUrl);
+            String checksum = Checksum.create("setConfigXML", body.toString(), sharedSecret);
+            String completeUrl = url + "/setConfigXML?checksum=" + checksum;
+            System.out.println("url> " + completeUrl);
 
-        Crawler crawler = crawlerFactory.createCrawler();
-        return fromXml(SetConfigXMLResponse.class, crawler.post(completeUrl, body.toString()));
+            Crawler crawler = crawlerFactory.createCrawler();
+            return fromXml(SetConfigXMLResponse.class, crawler.post(completeUrl, body.toString()));
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
     private String toXml(Config config) {
@@ -205,11 +254,15 @@ public class Client {
         return stringWriter.getBuffer().toString();
     }
 
-    public String getJoinMeetingUrl(JoinCommand joinCommand) throws Exception {
-        Validate.notNull(joinCommand);
-        String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
-        String checksum = Checksum.create("join", query, sharedSecret);
-        return url + "/join?" + query + "&checksum=" + checksum;
+    public String getJoinMeetingUrl(JoinCommand joinCommand) {
+        try {
+            Validate.notNull(joinCommand);
+            String query = toQuery(ReflectionUtils.getFieldsAndValuesInSortedMap(joinCommand));
+            String checksum = Checksum.create("join", query, sharedSecret);
+            return url + "/join?" + query + "&checksum=" + checksum;
+        } catch (Exception e) {
+            throw new ClientException(e);
+        }
     }
 
 }

@@ -24,6 +24,9 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class Checksum {
 
+    private Checksum() {
+    }
+
     public static String create(String call, String query, String sharedSecret) {
         String base = call + query + sharedSecret;
         return DigestUtils.shaHex(base);

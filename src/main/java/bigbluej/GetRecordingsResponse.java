@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
@@ -41,29 +45,17 @@ public class GetRecordingsResponse extends Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        GetRecordingsResponse that = (GetRecordingsResponse) o;
-
-        if (recordings != null ? !recordings.equals(that.recordings) : that.recordings != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (recordings != null ? recordings.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "GetRecordingsResponse{" +
-                "recordings=" + recordings +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -40,26 +44,17 @@ public class Playback {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Playback playback = (Playback) o;
-
-        if (format != null ? !format.equals(playback.format) : playback.format != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        return format != null ? format.hashCode() : 0;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "Playback{" +
-                "format=" + format +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

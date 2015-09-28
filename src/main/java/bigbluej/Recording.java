@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -117,48 +121,17 @@ public class Recording {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Recording recording = (Recording) o;
-
-        if (endTime != recording.endTime) return false;
-        if (published != recording.published) return false;
-        if (startTime != recording.startTime) return false;
-        if (meetingID != null ? !meetingID.equals(recording.meetingID) : recording.meetingID != null) return false;
-        if (metaData != null ? !metaData.equals(recording.metaData) : recording.metaData != null) return false;
-        if (name != null ? !name.equals(recording.name) : recording.name != null) return false;
-        if (playback != null ? !playback.equals(recording.playback) : recording.playback != null) return false;
-        if (recordID != null ? !recordID.equals(recording.recordID) : recording.recordID != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = recordID != null ? recordID.hashCode() : 0;
-        result = 31 * result + (meetingID != null ? meetingID.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (published ? 1 : 0);
-        result = 31 * result + (int) (startTime ^ (startTime >>> 32));
-        result = 31 * result + (int) (endTime ^ (endTime >>> 32));
-        result = 31 * result + (metaData != null ? metaData.hashCode() : 0);
-        result = 31 * result + (playback != null ? playback.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "Recording{" +
-                "recordID='" + recordID + '\'' +
-                ", meetingID='" + meetingID + '\'' +
-                ", name='" + name + '\'' +
-                ", published=" + published +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", metaData=" + metaData +
-                ", playback=" + playback +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

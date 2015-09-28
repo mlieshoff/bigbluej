@@ -17,6 +17,10 @@ package bigbluej.config;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -188,69 +192,17 @@ public class Config {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Config)) return false;
-
-        Config config = (Config) o;
-
-        if (application != null ? !application.equals(config.application) : config.application != null) return false;
-        if (browserVersions != null ? !browserVersions.equals(config.browserVersions) : config.browserVersions != null)
-            return false;
-        if (bwMon != null ? !bwMon.equals(config.bwMon) : config.bwMon != null) return false;
-        if (help != null ? !help.equals(config.help) : config.help != null) return false;
-        if (javaTest != null ? !javaTest.equals(config.javaTest) : config.javaTest != null) return false;
-        if (language != null ? !language.equals(config.language) : config.language != null) return false;
-        if (layout != null ? !layout.equals(config.layout) : config.layout != null) return false;
-        if (localeVersion != null ? !localeVersion.equals(config.localeVersion) : config.localeVersion != null)
-            return false;
-        if (lock != null ? !lock.equals(config.lock) : config.lock != null) return false;
-        if (modules != null ? !modules.equals(config.modules) : config.modules != null) return false;
-        if (portTest != null ? !portTest.equals(config.portTest) : config.portTest != null) return false;
-        if (shortcutKeys != null ? !shortcutKeys.equals(config.shortcutKeys) : config.shortcutKeys != null)
-            return false;
-        if (skinning != null ? !skinning.equals(config.skinning) : config.skinning != null) return false;
-        if (version != null ? !version.equals(config.version) : config.version != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = localeVersion != null ? localeVersion.hashCode() : 0;
-        result = 31 * result + (version != null ? version.hashCode() : 0);
-        result = 31 * result + (help != null ? help.hashCode() : 0);
-        result = 31 * result + (javaTest != null ? javaTest.hashCode() : 0);
-        result = 31 * result + (portTest != null ? portTest.hashCode() : 0);
-        result = 31 * result + (bwMon != null ? bwMon.hashCode() : 0);
-        result = 31 * result + (application != null ? application.hashCode() : 0);
-        result = 31 * result + (language != null ? language.hashCode() : 0);
-        result = 31 * result + (skinning != null ? skinning.hashCode() : 0);
-        result = 31 * result + (shortcutKeys != null ? shortcutKeys.hashCode() : 0);
-        result = 31 * result + (browserVersions != null ? browserVersions.hashCode() : 0);
-        result = 31 * result + (layout != null ? layout.hashCode() : 0);
-        result = 31 * result + (lock != null ? lock.hashCode() : 0);
-        result = 31 * result + (modules != null ? modules.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "Config{" +
-                "localeVersion=" + localeVersion +
-                ", version=" + version +
-                ", help=" + help +
-                ", javaTest=" + javaTest +
-                ", portTest=" + portTest +
-                ", bwMon=" + bwMon +
-                ", application=" + application +
-                ", language=" + language +
-                ", skinning=" + skinning +
-                ", shortcutKeys=" + shortcutKeys +
-                ", browserVersions=" + browserVersions +
-                ", layout=" + layout +
-                ", lock=" + lock +
-                ", modules=" + modules +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

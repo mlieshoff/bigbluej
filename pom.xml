@@ -4,8 +4,8 @@
     <groupId>org.mili</groupId>
     <artifactId>bigbluej</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1-SNAPSHOT</version>
-    <name>nod</name>
+    <version>1.0.1</version>
+    <name>bigbluej</name>
     <url>http://maven.apache.org</url>
     <inceptionYear>2015</inceptionYear>
     <description>java client for the big blue button</description>
@@ -33,10 +33,10 @@
     </licenses>
 
     <build>
-          <plugins>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-			</plugin>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -148,16 +148,21 @@
         <dependency>
         	<groupId>org.eclipse.jetty</groupId>
         	<artifactId>jetty-server</artifactId>
-        	<version>9.3.0.M1</version>
+            <version>9.3.4.RC0</version>
         </dependency>
         <dependency>
-        	<groupId>org.eclipse.jetty</groupId>
-        	<artifactId>jetty-servlet</artifactId>
-        	<version>9.3.0.M1</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.3.4.RC0</version>
+        </dependency>
+        <dependency>
+            <groupId>exactor.core</groupId>
+            <artifactId>exactor-core</artifactId>
+            <version>1.1.29.110414</version>
         </dependency>
     </dependencies>
 
-    <distributionManagement>
+    <!--distributionManagement>
         <repository>
             <id>org-mili-repo-releases</id>
             <name>Maven Repo for org.mili (releases)</name>
@@ -170,6 +175,26 @@
             <url>svn:https://org-mili-repo.googlecode.com/svn/maven-repo/snapshots</url>
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
+    </distributionManagement-->
+
+    <distributionManagement>
+        <repository>
+            <id>bintray</id>
+            <url>https://api.bintray.com/maven/mlieshoff/maven/bigbluej</url>
+        </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>mlieshoff-repo</id>
+            <url>http://dl.bintray.com/mlieshoff/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

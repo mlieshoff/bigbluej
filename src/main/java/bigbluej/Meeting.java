@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -128,51 +132,17 @@ public class Meeting {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Meeting meeting = (Meeting) o;
-
-        if (createTime != meeting.createTime) return false;
-        if (duration != meeting.duration) return false;
-        if (hasBeenForcibleEnded != meeting.hasBeenForcibleEnded) return false;
-        if (hasUserJoined != meeting.hasUserJoined) return false;
-        if (running != meeting.running) return false;
-        if (attendeePW != null ? !attendeePW.equals(meeting.attendeePW) : meeting.attendeePW != null) return false;
-        if (meetingID != null ? !meetingID.equals(meeting.meetingID) : meeting.meetingID != null) return false;
-        if (meetingName != null ? !meetingName.equals(meeting.meetingName) : meeting.meetingName != null) return false;
-        if (moderatorPW != null ? !moderatorPW.equals(meeting.moderatorPW) : meeting.moderatorPW != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = meetingID != null ? meetingID.hashCode() : 0;
-        result = 31 * result + (meetingName != null ? meetingName.hashCode() : 0);
-        result = 31 * result + (attendeePW != null ? attendeePW.hashCode() : 0);
-        result = 31 * result + (moderatorPW != null ? moderatorPW.hashCode() : 0);
-        result = 31 * result + (int) (createTime ^ (createTime >>> 32));
-        result = 31 * result + (hasUserJoined ? 1 : 0);
-        result = 31 * result + duration;
-        result = 31 * result + (hasBeenForcibleEnded ? 1 : 0);
-        result = 31 * result + (running ? 1 : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "Meeting{" +
-                "meetingID='" + meetingID + '\'' +
-                ", meetingName='" + meetingName + '\'' +
-                ", attendeePW='" + attendeePW + '\'' +
-                ", moderatorPW='" + moderatorPW + '\'' +
-                ", createTime=" + createTime +
-                ", hasUserJoined=" + hasUserJoined +
-                ", duration=" + duration +
-                ", hasBeenForcibleEnded=" + hasBeenForcibleEnded +
-                ", running=" + running +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

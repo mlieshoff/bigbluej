@@ -28,6 +28,9 @@ import java.util.TreeMap;
  */
 public class ReflectionUtils {
 
+    private ReflectionUtils() {
+    }
+
     public static SortedMap<String, Object> getFieldsAndValuesInSortedMap(Object object) throws IllegalAccessException {
         Validate.notNull(object);
         SortedMap<String, Object> fieldAndValues = new TreeMap<>();

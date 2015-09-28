@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -62,33 +66,17 @@ public class Attendee {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Attendee attendee = (Attendee) o;
-
-        if (fullName != null ? !fullName.equals(attendee.fullName) : attendee.fullName != null) return false;
-        if (role != null ? !role.equals(attendee.role) : attendee.role != null) return false;
-        if (userID != null ? !userID.equals(attendee.userID) : attendee.userID != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = userID != null ? userID.hashCode() : 0;
-        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "Attendee{" +
-                "userID='" + userID + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

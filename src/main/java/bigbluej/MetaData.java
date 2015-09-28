@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -95,42 +99,17 @@ public class MetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MetaData metaData = (MetaData) o;
-
-        if (contributor != null ? !contributor.equals(metaData.contributor) : metaData.contributor != null) return false;
-        if (creator != null ? !creator.equals(metaData.creator) : metaData.creator != null) return false;
-        if (description != null ? !description.equals(metaData.description) : metaData.description != null) return false;
-        if (language != null ? !language.equals(metaData.language) : metaData.language != null) return false;
-        if (subject != null ? !subject.equals(metaData.subject) : metaData.subject != null) return false;
-        if (title != null ? !title.equals(metaData.title) : metaData.title != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + (subject != null ? subject.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
-        result = 31 * result + (contributor != null ? contributor.hashCode() : 0);
-        result = 31 * result + (language != null ? language.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "MetaData{" +
-                "title='" + title + '\'' +
-                ", subject='" + subject + '\'' +
-                ", description='" + description + '\'' +
-                ", creator='" + creator + '\'' +
-                ", contributor='" + contributor + '\'' +
-                ", language='" + language + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

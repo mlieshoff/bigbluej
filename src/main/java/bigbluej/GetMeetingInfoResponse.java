@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -197,71 +201,17 @@ public class GetMeetingInfoResponse extends Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        GetMeetingInfoResponse that = (GetMeetingInfoResponse) o;
-
-        if (createTime != that.createTime) return false;
-        if (endTime != that.endTime) return false;
-        if (hasBeenForciblyEnded != that.hasBeenForciblyEnded) return false;
-        if (maxUsers != that.maxUsers) return false;
-        if (moderatorCount != that.moderatorCount) return false;
-        if (participantCount != that.participantCount) return false;
-        if (recording != that.recording) return false;
-        if (running != that.running) return false;
-        if (startTime != that.startTime) return false;
-        if (attendeePW != null ? !attendeePW.equals(that.attendeePW) : that.attendeePW != null) return false;
-        if (attendees != null ? !attendees.equals(that.attendees) : that.attendees != null) return false;
-        if (meetingID != null ? !meetingID.equals(that.meetingID) : that.meetingID != null) return false;
-        if (meetingName != null ? !meetingName.equals(that.meetingName) : that.meetingName != null) return false;
-        if (moderatorPW != null ? !moderatorPW.equals(that.moderatorPW) : that.moderatorPW != null) return false;
-        if (voiceBridge != null ? !voiceBridge.equals(that.voiceBridge) : that.voiceBridge != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (meetingName != null ? meetingName.hashCode() : 0);
-        result = 31 * result + (meetingID != null ? meetingID.hashCode() : 0);
-        result = 31 * result + (int) (createTime ^ (createTime >>> 32));
-        result = 31 * result + (voiceBridge != null ? voiceBridge.hashCode() : 0);
-        result = 31 * result + (attendeePW != null ? attendeePW.hashCode() : 0);
-        result = 31 * result + (moderatorPW != null ? moderatorPW.hashCode() : 0);
-        result = 31 * result + (running ? 1 : 0);
-        result = 31 * result + (recording ? 1 : 0);
-        result = 31 * result + (hasBeenForciblyEnded ? 1 : 0);
-        result = 31 * result + (int) (startTime ^ (startTime >>> 32));
-        result = 31 * result + (int) (endTime ^ (endTime >>> 32));
-        result = 31 * result + participantCount;
-        result = 31 * result + maxUsers;
-        result = 31 * result + moderatorCount;
-        result = 31 * result + (attendees != null ? attendees.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "GetMeetingInfoResponse{" +
-                "meetingName='" + meetingName + '\'' +
-                ", meetingID='" + meetingID + '\'' +
-                ", createTime=" + createTime +
-                ", voiceBridge='" + voiceBridge + '\'' +
-                ", attendeePW='" + attendeePW + '\'' +
-                ", moderatorPW='" + moderatorPW + '\'' +
-                ", running=" + running +
-                ", recording=" + recording +
-                ", hasBeenForciblyEnded=" + hasBeenForciblyEnded +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", participantCount=" + participantCount +
-                ", maxUsers=" + maxUsers +
-                ", moderatorCount=" + moderatorCount +
-                ", attendees=" + attendees +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

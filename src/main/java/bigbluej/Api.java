@@ -18,6 +18,7 @@ package bigbluej;
  */
 
 import bigbluej.config.Config;
+import bigbluej.exception.ApiException;
 import org.apache.commons.lang.Validate;
 
 import javax.servlet.ServletResponse;
@@ -35,60 +36,112 @@ public class Api {
         client = new Client(url, sharedSecret);
     }
 
-    public MeetingResponse createMeeting(CreateCommand createCommand) throws Exception {
-        return client.createMeeting(createCommand);
+    public MeetingResponse createMeeting(CreateCommand createCommand) {
+        try {
+            return client.createMeeting(createCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public MeetingResponse createMeeting(CreateCommand createCommand, ModulesCommand modulesCommand) throws Exception {
-        return client.createMeeting(createCommand, modulesCommand);
+    public MeetingResponse createMeeting(CreateCommand createCommand, ModulesCommand modulesCommand) {
+        try {
+            return client.createMeeting(createCommand, modulesCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) throws Exception {
-        client.joinMeeting(servletResponse, joinCommand);
+    public void joinMeeting(ServletResponse servletResponse, JoinCommand joinCommand) {
+        try {
+            client.joinMeeting(servletResponse, joinCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public IsMeetingRunningResponse isMeetingRunning(IsMeetingRunningCommand isMeetingRunningCommand) throws Exception {
-        return client.isMeetingRunning(isMeetingRunningCommand);
+    public IsMeetingRunningResponse isMeetingRunning(IsMeetingRunningCommand isMeetingRunningCommand) {
+        try {
+            return client.isMeetingRunning(isMeetingRunningCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public EndResponse end(EndCommand endCommand) throws Exception {
-        return client.end(endCommand);
+    public EndResponse end(EndCommand endCommand) {
+        try {
+            return client.end(endCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) throws Exception {
-        return client.getMeetingInfo(getMeetingInfoCommand);
+    public GetMeetingInfoResponse getMeetingInfo(GetMeetingInfoCommand getMeetingInfoCommand) {
+        try {
+            return client.getMeetingInfo(getMeetingInfoCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public GetMeetingsResponse getMeetings() throws Exception {
-        return client.getMeetings();
+    public GetMeetingsResponse getMeetings() {
+        try {
+            return client.getMeetings();
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public GetRecordingsResponse getRecordings(GetRecordingsCommand getRecordingsCommand) throws Exception {
-        return client.getRecordings(getRecordingsCommand);
+    public GetRecordingsResponse getRecordings(GetRecordingsCommand getRecordingsCommand) {
+        try {
+            return client.getRecordings(getRecordingsCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
-    public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) throws Exception {
-        return client.publishRecordings(publishRecordingsCommand);
+    public PublishRecordingsResponse publishRecordings(PublishRecordingsCommand publishRecordingsCommand) {
+        try {
+            return client.publishRecordings(publishRecordingsCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
+    }
+
+    public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) {
+        try {
+            return client.deleteRecordings(deleteRecordingsCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
+    }
+
+    public Config getDefaultConfigXML() {
+        try {
+            return client.getDefaultConfigXML();
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
+    }
+
+    public SetConfigXMLResponse setConfigXML(SetConfigXMLCommand setConfigXMLCommand) {
+        try {
+            return client.setConfigXML(setConfigXMLCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
+    }
+
+    public String getJoinMeetingUrl(JoinCommand joinCommand) {
+        try {
+            return client.getJoinMeetingUrl(joinCommand);
+        } catch (Exception e) {
+            throw new ApiException(e);
+        }
     }
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    public DeleteRecordingsResponse deleteRecordings(DeleteRecordingsCommand deleteRecordingsCommand) throws Exception {
-        return client.deleteRecordings(deleteRecordingsCommand);
-    }
-
-    public Config getDefaultConfigXML() throws Exception {
-        return client.getDefaultConfigXML();
-    }
-
-    public SetConfigXMLResponse setConfigXML(SetConfigXMLCommand setConfigXMLCommand) throws Exception {
-        return client.setConfigXML(setConfigXMLCommand);
-    }
-
-    public String getJoinMeetingUrl(JoinCommand joinCommand) throws Exception {
-        return client.getJoinMeetingUrl(joinCommand);
     }
 
     public static class Builder {

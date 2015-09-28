@@ -17,6 +17,10 @@ package bigbluej;
  * limitations under the License.
  */
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -64,33 +68,17 @@ public class Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Response response = (Response) o;
-
-        if (message != null ? !message.equals(response.message) : response.message != null) return false;
-        if (messageKey != null ? !messageKey.equals(response.messageKey) : response.messageKey != null) return false;
-        if (returnCode != response.returnCode) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = returnCode != null ? returnCode.hashCode() : 0;
-        result = 31 * result + (messageKey != null ? messageKey.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        return result;
+        return HashCodeBuilder.reflectionHashCode(17, 31, this);
     }
 
     @Override
     public String toString() {
-        return "Response{" +
-                "returnCode=" + returnCode +
-                ", messageKey='" + messageKey + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

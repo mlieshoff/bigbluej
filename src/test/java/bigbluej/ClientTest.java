@@ -18,6 +18,7 @@ package bigbluej;
  */
 
 import bigbluej.config.Config;
+import bigbluej.exception.ClientException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -239,7 +240,7 @@ public class ClientTest {
         new Client("abc", null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failCreateMeetingWithoutCommand() throws Exception {
         client.createMeeting(null);
     }
@@ -327,7 +328,7 @@ public class ClientTest {
         assertEquals(expected, actual);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failJoinMeetingWithoutCommand() throws Exception {
         client.joinMeeting(servletResponse, null);
     }
@@ -342,7 +343,7 @@ public class ClientTest {
         client.joinMeeting(servletResponse, joinCommand);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failIsMeetingRunningWithNullCommand() throws Exception {
         client.isMeetingRunning(null);
     }
@@ -368,7 +369,7 @@ public class ClientTest {
         assertTrue(getMeetingInfoResponse.isRunning());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failGetMeetingInfoWithoutCommand() throws Exception {
         client.getMeetingInfo(null);
     }
@@ -379,14 +380,14 @@ public class ClientTest {
         assertEquals(2, client.getMeetings().getMeetings().size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failGetRecordingsWithoutCommand() throws Exception {
         client.getRecordings(null);
     }
 
     @Test
     public void shouldGetRecordings() throws Exception {
-        when(crawler.post(anyString())).thenReturn(GET_RECORDINGS_XML);
+        when(crawler.get(anyString())).thenReturn(GET_RECORDINGS_XML);
         GetRecordingsResponse getRecordingsResponse = client.getRecordings(GetRecordingsCommand.builder()
                 .meetingID("abc")
                 .build());
@@ -394,7 +395,7 @@ public class ClientTest {
         // CHECK
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failPublishRecordingsWithoutCommand() throws Exception {
         client.publishRecordings(null);
     }
@@ -410,7 +411,7 @@ public class ClientTest {
         // CHECK
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ClientException.class)
     public void failDeleteRecordingsWithoutCommand() throws Exception {
         client.getRecordings(null);
     }

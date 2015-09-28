@@ -43,9 +43,7 @@ public class BigBlueJIntegrationTest {
     public void setUp() throws Exception {
         api = Api.builder()
                 .url("http://test-install.blindsidenetworks.com/bigbluebutton/api")
-//                .url("http://bilduin.dyndns.org/bigbluebutton/api")
                 .sharedSecret("8cd8ef52e8e101574e400365b55e11a6")
-//                .sharedSecret("426e6d6853360c629745320063d247cd")
                 .build();
         server = new Server(8080);
         ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/my-app", true, false);
@@ -149,7 +147,7 @@ public class BigBlueJIntegrationTest {
         assertFalse(getMeetingInfoResponse.isRecording());
 
         // ???
-        assertEquals(1, getMeetingInfoResponse.getAttendees());
+        assertEquals(1, getMeetingInfoResponse.getAttendees().size());
         assertEquals(1, getMeetingInfoResponse.getModeratorCount());
         assertEquals(1, getMeetingInfoResponse.getParticipantCount());
         assertTrue(getMeetingInfoResponse.isRunning());
@@ -236,7 +234,8 @@ public class BigBlueJIntegrationTest {
                 .build();
         MeetingResponse meetingResponse = api.createMeeting(createCommand);
         // join as moderator
-        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+        new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+
         // create recordings
 
         // publish recordings
@@ -271,7 +270,8 @@ public class BigBlueJIntegrationTest {
                 .build();
         MeetingResponse meetingResponse = api.createMeeting(createCommand);
         // join as moderator
-        String result = new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+        new Crawler().post("http://localhost:8080/my-app/join?meetingID=" + meetingResponse.getMeetingID());
+
         // create recordings
 
         // publish recordings
